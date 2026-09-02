@@ -1,0 +1,575 @@
+{% comment %}
+  ╔══════════════════════════════════════════════════════════════╗
+  ║  VEXORACARE — Hero Section 1                                  ║
+  ║  File: sections/vexoracare-hero-1.liquid                      ║
+  ║  Install: Theme Editor → Add Section → "VexoraCare · Hero 1"  ║
+  ╚══════════════════════════════════════════════════════════════╝
+{% endcomment %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+  /* ── Typing effect for "your body" ── */
+#vxh1-{{ section.id }} .typing-text {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid var(--primary);
+  width: 0;
+
+  animation: vxh1-typing 1.4s steps(10, end) 0.9s forwards,
+             vxh1-cursor 0.7s 4;
+}
+
+/* Typing animation */
+@keyframes vxh1-typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+/* Cursor blink */
+@keyframes vxh1-cursor {
+  50% { border-color: transparent }
+}
+/* ─── Design Tokens ─────────────────────────────────────────── */
+#vxh1-{{ section.id }} {
+  --bg:        #FFF3E4;
+  --primary:   #F97316;
+  --secondary: #FB923C;
+  --white:     #FFFFFF;
+  --ink:       #111827;
+  --ink-60:    rgba(17,24,39,0.60);
+  --ink-15:    rgba(17,24,39,0.08);
+  --glow:      rgba(249,115,22,0.18);
+  --font-disp: 'Playfair Display', Georgia, serif;
+  --font-body: 'Jost', sans-serif;
+}
+
+/* ─── Shell ─────────────────────────────────────────────────── */
+#vxh1-{{ section.id }} {
+  position: relative;
+  background: var(--bg);
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: 55% 45%;
+  overflow: hidden;
+  font-family: var(--font-body);
+}
+
+/* Ambient noise grain overlay */
+#vxh1-{{ section.id }}::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.6;
+}
+
+/* Large decorative arc behind image column */
+#vxh1-{{ section.id }} .vxh1-arc {
+  position: absolute;
+  top: -8%;
+  right: -5%;
+  width: 54%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 40% 40%, rgba(249,115,22,0.13) 0%, rgba(251,146,60,0.06) 50%, transparent 72%);
+  pointer-events: none;
+  z-index: 0;
+  animation: vxh1-pulse 7s ease-in-out infinite alternate;
+}
+
+/* ─── Left Column ────────────────────────────────────────────── */
+#vxh1-{{ section.id }} .vxh1-left {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 7vw 5vw 7vw 7vw;
+  gap: 0;
+}
+
+
+
+/* Headline */
+#vxh1-{{ section.id }} .vxh1-h1 {
+  font-family: var(--font-disp);
+  font-size: clamp(7rem, 5vw, 7.5rem);
+  font-weight: 900;
+  line-height: 1.0;
+  color: var(--ink);
+  margin: 0 0 28px;
+  letter-spacing: -0.02em;
+  opacity: 0;
+  animation: vxh1-rise 0.8s cubic-bezier(.22,1,.36,1) 0.25s forwards;
+}
+#vxh1-{{ section.id }} .vxh1-h1 .vxh1-italic {
+  font-style: italic;
+  color: var(--primary);
+  display: block;
+}
+#vxh1-{{ section.id }} .vxh1-h1 .vxh1-outline {
+  -webkit-text-stroke: 2px var(--ink);
+  color: transparent;
+}
+
+/* Sub copy */
+#vxh1-{{ section.id }} .vxh1-sub {
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.72;
+  color: var(--ink-60);
+  max-width: 430px;
+  margin: 0 0 44px;
+  font-weight: 300;
+  opacity: 0;
+  animation: vxh1-rise 0.8s cubic-bezier(.22,1,.36,1) 0.4s forwards;
+}
+
+/* CTA row */
+#vxh1-{{ section.id }} .vxh1-ctas {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: vxh1-rise 0.8s cubic-bezier(.22,1,.36,1) 0.55s forwards;
+}
+
+#vxh1-{{ section.id }} .vxh1-btn-solid {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--primary);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  padding: 15px 32px;
+  border-radius: 100px;
+  transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+  box-shadow: 0 10px 30px rgba(249,115,22,0.32), 0 2px 8px rgba(249,115,22,0.2);
+  will-change: transform;
+}
+#vxh1-{{ section.id }} .vxh1-btn-solid:hover {
+  background: #e8660d;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 18px 40px rgba(249,115,22,0.40), 0 4px 12px rgba(249,115,22,0.25);
+}
+#vxh1-{{ section.id }} .vxh1-btn-solid svg {
+  transition: transform 0.2s;
+}
+#vxh1-{{ section.id }} .vxh1-btn-solid:hover svg {
+  transform: translateX(4px);
+}
+
+#vxh1-{{ section.id }} .vxh1-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 14px 24px;
+  border-radius: 100px;
+  border: 1.5px solid rgba(17,24,39,0.18);
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+#vxh1-{{ section.id }} .vxh1-btn-outline:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(249,115,22,0.04);
+}
+
+/* Stats strip */
+#vxh1-{{ section.id }} .vxh1-stats {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 52px;
+  opacity: 0;
+  animation: vxh1-rise 0.8s cubic-bezier(.22,1,.36,1) 0.7s forwards;
+}
+#vxh1-{{ section.id }} .vxh1-stat {
+  display: flex;
+  flex-direction: column;
+  padding: 0 32px 0 0;
+  margin-right: 32px;
+  border-right: 1px solid rgba(17,24,39,0.12);
+}
+#vxh1-{{ section.id }} .vxh1-stat:last-child {
+  border-right: none;
+  padding-right: 0;
+  margin-right: 0;
+}
+#vxh1-{{ section.id }} .vxh1-stat-val {
+  font-family: var(--font-disp);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+#vxh1-{{ section.id }} .vxh1-stat-lbl {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+  margin-top: 5px;
+  font-weight: 400;
+}
+
+/* ─── Right Column ───────────────────────────────────────────── */
+#vxh1-{{ section.id }} .vxh1-right {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Image frame */
+#vxh1-{{ section.id }} .vxh1-img-frame {
+  position: relative;
+  width: min(380px, 82%);
+  opacity: 0;
+  animation: vxh1-emerge 1.1s cubic-bezier(.22,1,.36,1) 0.35s forwards;
+}
+
+/* Rotating dashed ring */
+#vxh1-{{ section.id }} .vxh1-ring {
+  position: absolute;
+  inset: -22px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(249,115,22,0.30);
+  animation: vxh1-spin 28s linear infinite;
+  pointer-events: none;
+}
+#vxh1-{{ section.id }} .vxh1-ring-dot {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--secondary);
+  box-shadow: 0 0 10px var(--secondary);
+}
+
+/* Photo blob */
+#vxh1-{{ section.id }} .vxh1-photo {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3/4;
+  border-radius: 56% 44% 60% 40% / 50% 44% 56% 50%;
+  overflow: hidden;
+  background: linear-gradient(145deg, rgba(249,115,22,0.12), rgba(251,146,60,0.06));
+  animation: vxh1-morph 12s ease-in-out infinite alternate;
+}
+#vxh1-{{ section.id }} .vxh1-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.8s cubic-bezier(.22,1,.36,1);
+}
+#vxh1-{{ section.id }} .vxh1-img-frame:hover .vxh1-photo img {
+  transform: scale(1.06);
+}
+
+/* Placeholder state */
+#vxh1-{{ section.id }} .vxh1-placeholder {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 14px;
+  background: linear-gradient(145deg, #FFE8CC, #FDDEB0);
+}
+#vxh1-{{ section.id }} .vxh1-placeholder svg { opacity: 0.5; }
+#vxh1-{{ section.id }} .vxh1-placeholder p {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: rgba(17,24,39,0.4);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Floating card: Trust */
+#vxh1-{{ section.id }} .vxh1-card-trust {
+  position: absolute;
+  bottom: 12%;
+  left: -18%;
+  background: var(--white);
+  border-radius: 18px;
+  padding: 16px 20px;
+  box-shadow: 0 20px 50px rgba(17,24,39,0.10), 0 4px 16px rgba(17,24,39,0.06);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 220px;
+  animation: vxh1-float-a 5s ease-in-out infinite;
+  z-index: 3;
+}
+#vxh1-{{ section.id }} .vxh1-card-trust-icon {
+  width: 44px; height: 44px; flex-shrink: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  display: flex; align-items: center; justify-content: center;
+}
+#vxh1-{{ section.id }} .vxh1-card-trust strong {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  display: block;
+  line-height: 1.2;
+}
+#vxh1-{{ section.id }} .vxh1-card-trust span {
+  font-size: 11px;
+  color: var(--ink-60);
+  display: block;
+  margin-top: 2px;
+}
+
+/* Floating card: Stars */
+#vxh1-{{ section.id }} .vxh1-card-stars {
+  position: absolute;
+  top: 10%;
+  right: -12%;
+  background: var(--white);
+  border-radius: 14px;
+  padding: 12px 18px;
+  box-shadow: 0 16px 40px rgba(17,24,39,0.09);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: vxh1-float-b 6s ease-in-out infinite;
+  z-index: 3;
+}
+#vxh1-{{ section.id }} .vxh1-stars-row {
+  display: flex;
+  gap: 3px;
+}
+#vxh1-{{ section.id }} .vxh1-stars-row svg { color: #FBBF24; }
+#vxh1-{{ section.id }} .vxh1-card-stars p {
+  font-size: 11.5px;
+  color: var(--ink-60);
+  font-weight: 400;
+  margin: 0;
+}
+#vxh1-{{ section.id }} .vxh1-card-stars strong {
+  font-size: 12.5px;
+  color: var(--ink);
+  display: block;
+}
+
+/* ─── Keyframes ─────────────────────────────────────────────── */
+@keyframes vxh1-rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes vxh1-emerge {
+  from { opacity: 0; transform: scale(0.94) translateY(20px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes vxh1-float-a {
+  0%, 100% { transform: translateY(0px) rotate(-1deg); }
+  50%       { transform: translateY(-10px) rotate(1deg); }
+}
+@keyframes vxh1-float-b {
+  0%, 100% { transform: translateY(0px) rotate(1deg); }
+  50%       { transform: translateY(-12px) rotate(-1deg); }
+}
+@keyframes vxh1-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes vxh1-morph {
+  0%   { border-radius: 56% 44% 60% 40% / 50% 44% 56% 50%; }
+  100% { border-radius: 44% 56% 40% 60% / 44% 56% 50% 50%; }
+}
+@keyframes vxh1-pulse {
+  0%   { transform: scale(1) translate(0,0); opacity: 1; }
+  100% { transform: scale(1.08) translate(-2%, 2%); opacity: 0.7; }
+}
+@keyframes vxh1-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+/* ─── Responsive ────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  #vxh1-{{ section.id }} {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    padding-bottom: 80px;
+  }
+  #vxh1-{{ section.id }} .vxh1-left {
+    padding: 72px 28px 40px;
+    align-items: center;
+    text-align: center;
+  }
+  #vxh1-{{ section.id }} .vxh1-pill { margin-left: auto; margin-right: auto; }
+  #vxh1-{{ section.id }} .vxh1-sub { max-width: 100%; }
+  #vxh1-{{ section.id }} .vxh1-ctas { justify-content: center; }
+  #vxh1-{{ section.id }} .vxh1-stats { justify-content: center; }
+  #vxh1-{{ section.id }} .vxh1-right { padding: 20px 28px 40px; }
+  #vxh1-{{ section.id }} .vxh1-img-frame { width: min(300px, 80%); }
+  #vxh1-{{ section.id }} .vxh1-card-trust { left: -8%; }
+  #vxh1-{{ section.id }} .vxh1-card-stars { right: -4%; }
+}
+</style>
+
+<section id="vxh1-{{ section.id }}" aria-label="{{ section.settings.aria_label | default: 'VexoraCare Hero' }}">
+
+  <div class="vxh1-arc" aria-hidden="true"></div>
+
+  {%- comment -%} ── LEFT COLUMN ── {%- endcomment -%}
+  <div class="vxh1-left">
+
+    
+
+    <h1 class="vxh1-h1">
+      {{ section.settings.headline_top | default: 'Reclaim' }}
+      <span class="vxh1-italic typing-text">
+  {{ section.settings.headline_italic | default: 'your body' }}
+</span>
+      <span class="vxh1-outline">{{ section.settings.headline_outline | default: 'Feel alive.' }}</span>
+    </h1>
+
+    <p class="vxh1-sub">
+      {{ section.settings.subtext | default: 'Posture correctors, deep-tissue massagers and targeted pain-relief tools — precision-crafted so you can move, perform and recover at your best.' }}
+    </p>
+
+    <div class="vxh1-ctas">
+      <a href="{{ section.settings.cta_primary_url | default: '/collections/all' }}" class="vxh1-btn-solid">
+        {{ section.settings.cta_primary_label | default: 'Shop All Products' }}
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      
+    </div>
+
+    <div class="vxh1-stats" aria-label="Key stats">
+      <div class="vxh1-stat">
+        <span class="vxh1-stat-val">{{ section.settings.stat_1_val | default: '60k+' }}</span>
+        <span class="vxh1-stat-lbl">{{ section.settings.stat_1_lbl | default: 'Customers' }}</span>
+      </div>
+      <div class="vxh1-stat">
+        <span class="vxh1-stat-val">{{ section.settings.stat_2_val | default: '4.9★' }}</span>
+        <span class="vxh1-stat-lbl">{{ section.settings.stat_2_lbl | default: 'Avg. Rating' }}</span>
+      </div>
+      
+    </div>
+
+  </div>
+
+  {%- comment -%} ── RIGHT COLUMN ── {%- endcomment -%}
+  <div class="vxh1-right">
+    <div class="vxh1-img-frame">
+
+      <div class="vxh1-ring" aria-hidden="true">
+        <div class="vxh1-ring-dot"></div>
+      </div>
+
+      <div class="vxh1-photo">
+        {%- if section.settings.hero_image != blank -%}
+          <img
+            src="{{ section.settings.hero_image | img_url: '900x' }}"
+            srcset="{{ section.settings.hero_image | img_url: '600x' }} 600w, {{ section.settings.hero_image | img_url: '900x' }} 900w"
+            alt="{{ section.settings.hero_image_alt | default: 'VexoraCare wellness product' }}"
+            loading="eager"
+            fetchpriority="high"
+          >
+        {%- else -%}
+          <div class="vxh1-placeholder">
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="52" height="52" rx="14" fill="rgba(249,115,22,0.15)"/>
+              <path d="M14 38l8-11 5.5 7L33 26l9 12H14z" stroke="#F97316" stroke-width="1.8" stroke-linejoin="round" fill="none"/>
+              <circle cx="20" cy="22" r="3" stroke="#F97316" stroke-width="1.8" fill="none"/>
+            </svg>
+            <p>Your product image</p>
+          </div>
+        {%- endif -%}
+      </div>
+
+      <!-- Floating: trust badge -->
+      <div class="vxh1-card-trust" aria-hidden="true">
+        <div class="vxh1-card-trust-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+            <path d="M11 2l2.4 6.3H20l-5.4 3.9 2 6.3L11 14.5 5.4 18.5l2-6.3L2 8.3h6.6L11 2z" fill="white"/>
+          </svg>
+        </div>
+        <div>
+          <strong>{{ section.settings.trust_title | default: 'Physio Approved' }}</strong>
+          <span>{{ section.settings.trust_sub | default: 'Clinically validated designs' }}</span>
+        </div>
+      </div>
+
+      <!-- Floating: stars -->
+      <div class="vxh1-card-stars" aria-hidden="true">
+        <div class="vxh1-stars-row">
+          {%- for i in (1..5) -%}
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+              <path d="M7 1l1.6 4.1H13l-3.6 2.6 1.4 4.2L7 9.6 3.2 11.9l1.4-4.2L1 5.1h4.4L7 1z"/>
+            </svg>
+          {%- endfor -%}
+        </div>
+        <strong>{{ section.settings.stars_title | default: '"Transformed my posture"' }}</strong>
+        <p>{{ section.settings.stars_sub | default: '— Verified buyer' }}</p>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "VexoraCare · Hero 1",
+  "settings": [
+    { "type": "header",  "content": "Headlines" },
+    { "type": "text",    "id": "eyebrow",          "label": "Eyebrow pill text",        "default": "Wellness Without Compromise" },
+    { "type": "text",    "id": "headline_top",      "label": "Headline — word 1",        "default": "Reclaim" },
+    { "type": "text",    "id": "headline_italic",   "label": "Headline — italic line",   "default": "your body" },
+    { "type": "text",    "id": "headline_outline",  "label": "Headline — outline line",  "default": "Feel alive." },
+    { "type": "textarea","id": "subtext",           "label": "Subheading copy",          "default": "Posture correctors, deep-tissue massagers and targeted pain-relief tools — precision-crafted so you can move, perform and recover at your best." },
+
+    { "type": "header",  "content": "Buttons" },
+    { "type": "text",    "id": "cta_primary_label", "label": "Primary button label",     "default": "Shop All Products" },
+    { "type": "url",     "id": "cta_primary_url",   "label": "Primary button URL" },
+    { "type": "text",    "id": "cta_secondary_label","label":"Secondary button label",   "default": "Explore the range" },
+    { "type": "url",     "id": "cta_secondary_url", "label": "Secondary button URL" },
+
+    { "type": "header",  "content": "Stats" },
+    { "type": "text",    "id": "stat_1_val",        "label": "Stat 1 value",  "default": "60k+" },
+    { "type": "text",    "id": "stat_1_lbl",        "label": "Stat 1 label",  "default": "Customers" },
+    { "type": "text",    "id": "stat_2_val",        "label": "Stat 2 value",  "default": "4.9★" },
+    { "type": "text",    "id": "stat_2_lbl",        "label": "Stat 2 label",  "default": "Avg. Rating" },
+    { "type": "text",    "id": "stat_3_val",        "label": "Stat 3 value",  "default": "30d" },
+    { "type": "text",    "id": "stat_3_lbl",        "label": "Stat 3 label",  "default": "Free Returns" },
+
+    { "type": "header",       "content": "Hero Image" },
+    { "type": "image_picker", "id": "hero_image",     "label": "Product image (upload here)" },
+    { "type": "text",         "id": "hero_image_alt", "label": "Image alt text", "default": "VexoraCare wellness product" },
+
+    { "type": "header",  "content": "Floating Badges" },
+    { "type": "text",    "id": "trust_title",       "label": "Trust badge title",   "default": "Physio Approved" },
+    { "type": "text",    "id": "trust_sub",         "label": "Trust badge subtitle","default": "Clinically validated designs" },
+    { "type": "text",    "id": "stars_title",       "label": "Review quote",        "default": "\"Transformed my posture\"" },
+    { "type": "text",    "id": "stars_sub",         "label": "Review attribution",  "default": "— Verified buyer" },
+
+    { "type": "text",    "id": "aria_label",        "label": "Section aria label (accessibility)", "default": "VexoraCare Hero" }
+  ],
+  "presets": [{ "name": "VexoraCare · Hero 1", "category": "VexoraCare" }]
+}
+{% endschema %}

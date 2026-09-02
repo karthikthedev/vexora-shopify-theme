@@ -1,0 +1,89 @@
+<div class="wishlist-container">
+
+  <h2 class="wishlist-title">Your Wishlist</h2>
+
+  <div id="wishlist-items" class="wishlist-grid"></div>
+
+  <p id="empty-msg" style="display:none; text-align:center; margin-top:20px;">
+    No items added to wishlist.
+  </p>
+
+</div>
+
+<script>
+function loadWishlist() {
+  let wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+
+  const wrapper = document.getElementById("wishlist-items");
+  const emptyMsg = document.getElementById("empty-msg");
+
+  if (wishlist.length === 0) {
+    emptyMsg.style.display = "block";
+    return;
+  }
+
+  emptyMsg.style.display = "none";
+
+  wrapper.innerHTML = "";
+
+  wishlist.forEach(handle => {
+    fetch(`/products/${handle}.js`)
+      .then(res => res.json())
+      .then(product => {
+        wrapper.innerHTML += `
+          <a href="/products/${product.handle}" class="wishlist-card">
+            <img src="${product.featured_image}" />
+
+            <div class="wc-info">
+              <h3>${product.title}</h3>
+              <p>${(product.price / 100).toLocaleString('en-IN', {
+                style: 'currency',
+                currency: 'INR'
+              })}</p>
+            </div>
+          </a>
+        `;
+      });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", loadWishlist);
+</script>
+
+<style>
+.wishlist-container {
+  padding: 15px;
+}
+
+.wishlist-title {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.wishlist-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.wishlist-card {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  text-decoration: none;
+  color: #000;
+  box-shadow: 0 0 6px rgba(0,0,0,0.1);
+}
+
+.wishlist-card img {
+  width: 100%;
+  object-fit: cover;
+  height: 180px;
+}
+
+.wc-info {
+  padding: 10px;
+}
+</style>

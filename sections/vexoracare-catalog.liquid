@@ -1,0 +1,707 @@
+{% comment %}
+  ╔══════════════════════════════════════════════════════════════╗
+  ║  VEXORACARE — Collections Catalog Section                     ║
+  ║  File: sections/vexoracare-catalog.liquid                     ║
+  ║  Install: Theme Editor → Add Section → "VexoraCare · Catalog" ║
+  ╚══════════════════════════════════════════════════════════════╝
+{% endcomment %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ─── Tokens ──────────────────────────────────────────────────── */
+#vxcat-{{ section.id }} {
+  --bg:        #FFF3E4;
+  --primary:   #F97316;
+  --secondary: #FB923C;
+  --white:     #FFFFFF;
+  --ink:       #111827;
+  --ink-50:    rgba(17,24,39,0.50);
+  --ink-10:    rgba(17,24,39,0.07);
+  --font-disp: 'Playfair Display', Georgia, serif;
+  --font-body: 'Jost', sans-serif;
+}
+
+/* ─── Section wrapper ─────────────────────────────────────────── */
+#vxcat-{{ section.id }} {
+  background: var(--bg);
+  padding-top: 20px !important;
+  padding-bottom: 120px;
+  position: relative;
+  font-family: var(--font-body);
+  overflow: hidden;
+   
+}
+
+/* Faint grid lines for texture */
+#vxcat-{{ section.id }}::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(249,115,22,0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(249,115,22,0.045) 1px, transparent 1px);
+  background-size: 72px 72px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Soft radial wash top-right */
+#vxcat-{{ section.id }}::after {
+  content: '';
+  position: absolute;
+  top: -120px; right: -120px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(249,115,22,0.10) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Inner container ─────────────────────────────────────────── */
+#vxcat-{{ section.id }} .vxcat-wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 40px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ─── Section header ──────────────────────────────────────────── */
+#vxcat-{{ section.id }} .vxcat-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 10px;
+}
+
+#vxcat-{{ section.id }} .vxcat-header-left {}
+
+#vxcat-{{ section.id }} .vxcat-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 16px;
+}
+#vxcat-{{ section.id }} .vxcat-eyebrow::before {
+  content: '';
+  display: block;
+  align-items: center;
+  width: 30px; height: 1.5px;
+  background: var(--primary);
+  border-radius: 2px;
+}
+
+#vxcat-{{ section.id }} .vxcat-title {
+  font-family: var(--font-disp);
+  font-size: clamp(3rem, 3vw, 5rem);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.06;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+#vxcat-{{ section.id }} .vxcat-title em {
+  font-style: italic;
+  color: var(--primary);
+}
+
+#vxcat-{{ section.id }} .vxcat-header-right {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 14px;
+}
+#vxcat-{{ section.id }} .vxcat-header-sub {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ink-50);
+  font-weight: 300;
+  max-width: 340px;
+  text-align: right;
+  margin: 0;
+}
+#vxcat-{{ section.id }} .vxcat-header-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--ink-50);
+  text-transform: uppercase;
+}
+#vxcat-{{ section.id }} .vxcat-header-count span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  background: var(--primary);
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 50%;
+}
+
+/* ─── Grid ────────────────────────────────────────────────────── */
+#vxcat-{{ section.id }} .vxcat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* ─── Card base ───────────────────────────────────────────────── */
+#vxcat-{{ section.id }} .vxcat-card {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--white);
+  border: 1px solid rgba(17,24,39,0.08);
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.40s cubic-bezier(.22,1,.36,1),
+              box-shadow 0.40s cubic-bezier(.22,1,.36,1),
+              border-color 0.30s ease;
+  will-change: transform;
+  cursor: pointer;
+}
+#vxcat-{{ section.id }} .vxcat-card:hover {
+  transform: translateY(-6px) scale(1.005);
+  box-shadow: 0 28px 64px rgba(249,115,22,0.13), 0 8px 24px rgba(17,24,39,0.08);
+  border-color: rgba(249,115,22,0.22);
+}
+
+/* ─── 5th card spans full width ──────────────────────────────── */
+#vxcat-{{ section.id }} .vxcat-card--wide {
+  grid-column: 1 / -1;
+  flex-direction: row;
+}
+#vxcat-{{ section.id }} .vxcat-card--wide .vxcat-card-img-wrap {
+  width: 48%;
+  aspect-ratio: auto;
+  min-height: 340px;
+}
+#vxcat-{{ section.id }} .vxcat-card--wide .vxcat-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 52px 56px;
+}
+#vxcat-{{ section.id }} .vxcat-card--wide .vxcat-card-title {
+  font-size: clamp(3rem, 2vw, 3rem);
+}
+
+/* ─── Card image area ─────────────────────────────────────────── */
+#vxcat-{{ section.id }} .vxcat-card-img-wrap {
+  position: relative;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  background: linear-gradient(145deg, #FFE8CC, #FDDCB5);
+  flex-shrink: 0;
+}
+
+/* Hover zoom on image */
+#vxcat-{{ section.id }} .vxcat-card-img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.65s cubic-bezier(.22,1,.36,1);
+}
+#vxcat-{{ section.id }} .vxcat-card:hover .vxcat-card-img-wrap img {
+  transform: scale(1.07);
+}
+
+/* Gradient overlay on image */
+#vxcat-{{ section.id }} .vxcat-card-img-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 40%,
+    rgba(17,24,39,0.18) 100%
+  );
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+#vxcat-{{ section.id }} .vxcat-card:hover .vxcat-card-img-wrap::after {
+  opacity: 0.6;
+}
+
+/* Placeholder for missing collection images */
+#vxcat-{{ section.id }} .vxcat-card-placeholder {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 14px;
+  background: linear-gradient(145deg, #FFE8CC, #FDDCB5);
+}
+#vxcat-{{ section.id }} .vxcat-card-placeholder svg { opacity: 0.6; }
+#vxcat-{{ section.id }} .vxcat-card-placeholder p {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: rgba(17,24,39,0.35);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Collection number badge on image */
+#vxcat-{{ section.id }} .vxcat-card-badge {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  z-index: 3;
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(8px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-disp);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary);
+  box-shadow: 0 4px 14px rgba(17,24,39,0.10);
+  transition: background 0.25s, transform 0.25s;
+}
+#vxcat-{{ section.id }} .vxcat-card:hover .vxcat-card-badge {
+  background: var(--primary);
+  color: var(--white);
+  transform: scale(1.1) rotate(-6deg);
+}
+
+/* ─── Card body ───────────────────────────────────────────────── */
+#vxcat-{{ section.id }} .vxcat-card-body {
+  padding: 28px 30px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+#vxcat-{{ section.id }} .vxcat-card-tag {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 10px;
+  opacity: 0.85;
+}
+
+#vxcat-{{ section.id }} .vxcat-card-title {
+  font-family: var(--font-disp);
+  font-size: clamp(2.3rem, 2vw, 2.3rem);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.15;
+  margin: 0 0 12px;
+  letter-spacing: -0.01em;
+}
+
+#vxcat-{{ section.id }} .vxcat-card-desc {
+  font-size: 14px;
+  line-height: 1.70;
+  color: var(--ink-50);
+  font-weight: 300;
+  margin: 0 0 24px;
+}
+
+#vxcat-{{ section.id }} .vxcat-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-top: auto;
+  margin-bottom; 0px;
+  position: relative;
+  width: fit-content;
+  transition: color 0.2s;
+}
+#vxcat-{{ section.id }} .vxcat-card-cta::after {
+  content: '';
+  position: absolute;
+  bottom: -3px; left: 0;
+  width: 0; height: 1.5px;
+  background: var(--primary);
+  border-radius: 2px;
+  transition: width 0.3s cubic-bezier(.22,1,.36,1);
+}
+#vxcat-{{ section.id }} .vxcat-card:hover .vxcat-card-cta {
+  color: var(--primary);
+}
+#vxcat-{{ section.id }} .vxcat-card:hover .vxcat-card-cta::after {
+  width: 100%;
+}
+#vxcat-{{ section.id }} .vxcat-card-cta .vxcat-arrow {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--ink-10);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.25s, transform 0.25s;
+  flex-shrink: 0;
+}
+#vxcat-{{ section.id }} .vxcat-card:hover .vxcat-card-cta .vxcat-arrow {
+  background: var(--primary);
+  transform: translateX(4px);
+}
+#vxcat-{{ section.id }} .vxcat-card:hover .vxcat-card-cta .vxcat-arrow svg path {
+  stroke: var(--white);
+}
+
+/* ─── Scroll reveal ───────────────────────────────────────────── */
+#vxcat-{{ section.id }} .vxcat-reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.60s cubic-bezier(.22,1,.36,1),
+              transform 0.60s cubic-bezier(.22,1,.36,1);
+}
+#vxcat-{{ section.id }} .vxcat-reveal.vx-vis {
+  opacity: 1;
+  transform: none;
+}
+#vxcat-{{ section.id }} .vxcat-d1 { transition-delay: 0.05s; }
+#vxcat-{{ section.id }} .vxcat-d2 { transition-delay: 0.14s; }
+#vxcat-{{ section.id }} .vxcat-d3 { transition-delay: 0.22s; }
+#vxcat-{{ section.id }} .vxcat-d4 { transition-delay: 0.30s; }
+#vxcat-{{ section.id }} .vxcat-d5 { transition-delay: 0.38s; }
+
+/* ─── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  #vxcat-{{ section.id }} { padding: 72px 0 88px; }
+  #vxcat-{{ section.id }} .vxcat-wrap { padding: 0 20px; }
+  #vxcat-{{ section.id }} .vxcat-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  #vxcat-{{ section.id }} .vxcat-header-right { align-items: flex-start; }
+  #vxcat-{{ section.id }} .vxcat-header-sub { text-align: left; }
+  #vxcat-{{ section.id }} .vxcat-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  #vxcat-{{ section.id }} .vxcat-card--wide {
+    flex-direction: column;
+    grid-column: 1;
+  }
+  #vxcat-{{ section.id }} .vxcat-card--wide .vxcat-card-img-wrap {
+    width: 100%;
+    min-height: unset;
+    aspect-ratio: 4/3;
+  }
+  #vxcat-{{ section.id }} .vxcat-card--wide .vxcat-card-body {
+    padding: 28px 28px 30px;
+  }
+}
+</style>
+
+<section id="vxcat-{{ section.id }}" aria-label="{{ section.settings.aria_label | default: 'Shop by Collection' }}">
+  <div class="vxcat-wrap">
+
+    <!-- ── Header ── -->
+    <div class="vxcat-header vxcat-reveal">
+      <div class="vxcat-header-left">
+        <div class="vxcat-eyebrow">{{ section.settings.eyebrow | default: 'Shop by Collection' }}</div>
+        <h2 class="vxcat-title">
+          {{ section.settings.title_line1 | default: 'Find what your' }}<br>
+          <em>{{ section.settings.title_italic | default: 'body needs.' }}</em>
+        </h2>
+      </div>
+      <div class="vxcat-header-right">
+        
+        <div class="vxcat-header-count">
+          <span>5</span> Collections available
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Grid ── -->
+    <div class="vxcat-grid">
+
+      {%- comment -%} ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        CARDS 1 & 2 — Row 1
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ {%- endcomment -%}
+
+      {%- comment -%} Card 1: Posture Corrector {%- endcomment -%}
+      {%- assign col1 = collections[section.settings.col1_handle] -%}
+      <a href="{{ col1.url | default: '/collections/posture-corrector' }}"
+         class="vxcat-card vxcat-reveal vxcat-d1"
+         aria-label="Shop {{ section.settings.col1_title | default: 'Posture Corrector' }}">
+        <div class="vxcat-card-img-wrap">
+          {%- if col1.image != blank -%}
+            <img src="{{ col1.image | img_url: '800x' }}"
+                 srcset="{{ col1.image | img_url: '500x' }} 500w, {{ col1.image | img_url: '800x' }} 800w"
+                 alt="{{ col1.image.alt | default: section.settings.col1_title | default: 'Posture Corrector' }}"
+                 loading="lazy">
+          {%- else -%}
+            <div class="vxcat-card-placeholder">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="48" height="48" rx="14" fill="rgba(249,115,22,0.15)"/>
+                <path d="M24 10a4 4 0 1 1 0 8 4 4 0 0 1 0-8zM18 20h12l-2 9h-8l-2-9zM20 29l-4 9h3l2-5.5h6L29 38h3l-4-9" stroke="#F97316" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <p>Collection image</p>
+            </div>
+          {%- endif -%}
+          <div class="vxcat-card-badge" aria-hidden="true">01</div>
+        </div>
+        <div class="vxcat-card-body">
+          <span class="vxcat-card-tag">{{ section.settings.col1_tag | default: 'Alignment & Support' }}</span>
+          <h3 class="vxcat-card-title">{{ section.settings.col1_title | default: 'Posture Correctors' }}</h3>
+          <span class="vxcat-card-cta" aria-hidden="true">
+            
+            <span class="vxcat-arrow">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2 7h10M8 3l4 4-4 4" stroke="#111827" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </span>
+        </div>
+      </a>
+
+      {%- comment -%} Card 2: Smart Posture Tech {%- endcomment -%}
+      {%- assign col2 = collections[section.settings.col2_handle] -%}
+      <a href="{{ col2.url | default: '/collections/smart-posture-tech' }}"
+         class="vxcat-card vxcat-reveal vxcat-d2"
+         aria-label="Shop {{ section.settings.col2_title | default: 'Smart Posture Tech' }}">
+        <div class="vxcat-card-img-wrap">
+          {%- if col2.image != blank -%}
+            <img src="{{ col2.image | img_url: '800x' }}"
+                 srcset="{{ col2.image | img_url: '500x' }} 500w, {{ col2.image | img_url: '800x' }} 800w"
+                 alt="{{ col2.image.alt | default: section.settings.col2_title | default: 'Smart Posture Tech' }}"
+                 loading="lazy">
+          {%- else -%}
+            <div class="vxcat-card-placeholder">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="48" height="48" rx="14" fill="rgba(249,115,22,0.15)"/>
+                <rect x="14" y="16" width="20" height="14" rx="3" stroke="#F97316" stroke-width="1.6"/>
+                <path d="M21 30v4M27 30v4M18 34h12" stroke="#F97316" stroke-width="1.5" stroke-linecap="round"/>
+                <circle cx="24" cy="23" r="3" stroke="#F97316" stroke-width="1.4"/>
+              </svg>
+              <p>Collection image</p>
+            </div>
+          {%- endif -%}
+          <div class="vxcat-card-badge" aria-hidden="true">02</div>
+        </div>
+        <div class="vxcat-card-body">
+          <span class="vxcat-card-tag">{{ section.settings.col2_tag | default: 'Wearable Technology' }}</span>
+          <h3 class="vxcat-card-title">{{ section.settings.col2_title | default: 'Smart Posture Tech' }}</h3>
+          
+          <span class="vxcat-card-cta" aria-hidden="true">
+           
+            <span class="vxcat-arrow">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2 7h10M8 3l4 4-4 4" stroke="#111827" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </span>
+        </div>
+      </a>
+
+      {%- comment -%} ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        CARDS 3 & 4 — Row 2
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ {%- endcomment -%}
+
+      {%- comment -%} Card 3: Back Pain Relief {%- endcomment -%}
+      {%- assign col5 = collections[section.settings.col5_handle] -%}
+      <a href="{{ col5.url | default: '/collections/back-pain-relief' }}"
+         class="vxcat-card vxcat-reveal vxcat-d3"
+         aria-label="Shop {{ section.settings.col5_title | default: 'Back Pain Relief' }}">
+        <div class="vxcat-card-img-wrap">
+          {%- if col5.image != blank -%}
+            <img src="{{ col5.image | img_url: '800x' }}"
+                 srcset="{{ col5.image | img_url: '500x' }} 500w, {{ col5.image | img_url: '800x' }} 800w"
+                 alt="{{ col5.image.alt | default: section.settings.col5_title | default: 'Back Pain Relief' }}"
+                 loading="lazy">
+          {%- else -%}
+            <div class="vxcat-card-placeholder">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="48" height="48" rx="14" fill="rgba(249,115,22,0.15)"/>
+                <path d="M24 12c0 0-10 6-10 16a10 10 0 0 0 20 0c0-10-10-16-10-16z" stroke="#F97316" stroke-width="1.7" fill="none"/>
+                <path d="M24 24v8M20 28h8" stroke="#F97316" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+              <p>Collection image</p>
+            </div>
+          {%- endif -%}
+          <div class="vxcat-card-badge" aria-hidden="true">03</div>
+        </div>
+        <div class="vxcat-card-body">
+          <span class="vxcat-card-tag">{{ section.settings.col5_tag | default: 'Pain Management' }}</span>
+          <h3 class="vxcat-card-title">{{ section.settings.col5_title | default: 'Back Pain Relief' }}</h3>
+          
+          <span class="vxcat-card-cta" aria-hidden="true">
+          
+            <span class="vxcat-arrow">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2 7h10M8 3l4 4-4 4" stroke="#111827" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </span>
+        </div>
+      </a>
+
+      {%- comment -%} Card 4: Ergonomic Products {%- endcomment -%}
+      {%- assign col4 = collections[section.settings.col4_handle] -%}
+      <a href="{{ col4.url | default: '/collections/ergonomic-products' }}"
+         class="vxcat-card vxcat-reveal vxcat-d4"
+         aria-label="Shop {{ section.settings.col4_title | default: 'Ergonomic Products' }}">
+        <div class="vxcat-card-img-wrap">
+          {%- if col4.image != blank -%}
+            <img src="{{ col4.image | img_url: '800x' }}"
+                 srcset="{{ col4.image | img_url: '500x' }} 500w, {{ col4.image | img_url: '800x' }} 800w"
+                 alt="{{ col4.image.alt | default: section.settings.col4_title | default: 'Ergonomic Products' }}"
+                 loading="lazy">
+          {%- else -%}
+            <div class="vxcat-card-placeholder">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="48" height="48" rx="14" fill="rgba(249,115,22,0.15)"/>
+                <path d="M12 32h24M16 32V20a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12" stroke="#F97316" stroke-width="1.6" stroke-linecap="round"/>
+                <rect x="20" y="22" width="8" height="6" rx="1" stroke="#F97316" stroke-width="1.4"/>
+              </svg>
+              <p>Collection image</p>
+            </div>
+          {%- endif -%}
+          <div class="vxcat-card-badge" aria-hidden="true">04</div>
+        </div>
+        <div class="vxcat-card-body">
+          <span class="vxcat-card-tag">{{ section.settings.col4_tag | default: 'Workspace Wellness' }}</span>
+          <h3 class="vxcat-card-title">{{ section.settings.col4_title | default: 'Ergonomic Products' }}</h3>
+          
+          <span class="vxcat-card-cta" aria-hidden="true">
+          
+            <span class="vxcat-arrow">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2 7h10M8 3l4 4-4 4" stroke="#111827" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </span>
+        </div>
+      </a>
+
+      {%- comment -%} ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        CARD 5 — Full width (Row 3, featured)
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ {%- endcomment -%}
+
+      {%- assign col3 = collections[section.settings.col3_handle] -%}
+      <a href="{{ col3.url | default: '/collections/posture-training-rehab' }}"
+         class="vxcat-card vxcat-card--wide vxcat-reveal vxcat-d5"
+         aria-label="Shop {{ section.settings.col3_title | default: 'Posture Training Rehab' }}">
+        <div class="vxcat-card-img-wrap">
+          {%- if col3.image != blank -%}
+            <img src="{{ col3.image | img_url: '1000x' }}"
+                 srcset="{{ col3.image | img_url: '600x' }} 600w, {{ col3.image | img_url: '1000x' }} 1000w"
+                 alt="{{ col3.image.alt | default: section.settings.col3_title | default: 'Posture Training Rehab' }}"
+                 loading="lazy">
+          {%- else -%}
+            <div class="vxcat-card-placeholder">
+              <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="56" height="56" rx="16" fill="rgba(249,115,22,0.15)"/>
+                <path d="M28 12c-4 0-8 3-8 8s4 8 8 8" stroke="#F97316" stroke-width="1.7" stroke-linecap="round"/>
+                <path d="M28 12c4 0 8 3 8 8s-4 8-8 8" stroke="#F97316" stroke-width="1.7" stroke-linecap="round" stroke-dasharray="3 2"/>
+                <path d="M22 36l6-8 6 8" stroke="#F97316" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <p>Collection image</p>
+            </div>
+          {%- endif -%}
+          <div class="vxcat-card-badge" aria-hidden="true">05</div>
+        </div>
+        <div class="vxcat-card-body">
+          <span class="vxcat-card-tag">{{ section.settings.col3_tag | default: 'Training & Recovery' }}</span>
+          <h3 class="vxcat-card-title">{{ section.settings.col3_title | default: 'Posture Training & Rehab' }}</h3>
+          
+          <span class="vxcat-card-cta" aria-hidden="true">
+          
+            <span class="vxcat-arrow">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2 7h10M8 3l4 4-4 4" stroke="#111827" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </span>
+        </div>
+      </a>
+
+    </div>
+    <!-- /vxcat-grid -->
+
+  </div>
+  <!-- /vxcat-wrap -->
+</section>
+
+<script>
+(function () {
+  var els = document.querySelectorAll('#vxcat-{{ section.id }} .vxcat-reveal');
+  if (!els.length || !('IntersectionObserver' in window)) {
+    els.forEach(function (el) { el.classList.add('vx-vis'); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('vx-vis');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.10 });
+  els.forEach(function (el) { io.observe(el); });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "VexoraCare · Catalog",
+  "settings": [
+    { "type": "header",  "content": "Section heading" },
+    { "type": "text",    "id": "eyebrow",       "label": "Eyebrow text",         "default": "Shop by Collection" },
+    { "type": "text",    "id": "title_line1",   "label": "Title — line 1",       "default": "Find what your" },
+    { "type": "text",    "id": "title_italic",  "label": "Title — italic line",  "default": "body needs." },
+    { "type": "textarea","id": "header_sub",    "label": "Header subtext",       "default": "Five expertly curated collections. One goal — helping you move, recover and live without limits." },
+    { "type": "text",    "id": "aria_label",    "label": "Section aria label",   "default": "Shop by Collection" },
+
+    { "type": "header",  "content": "Collection 1: Posture Corrector" },
+    { "type": "text",    "id": "col1_handle",   "label": "Collection handle",    "default": "posture-corrector",           "info": "The URL slug from Shopify Admin Collections" },
+    { "type": "text",    "id": "col1_tag",      "label": "Category tag",         "default": "Alignment & Support" },
+    { "type": "text",    "id": "col1_title",    "label": "Card title",           "default": "Posture Corrector" },
+    { "type": "textarea","id": "col1_desc",     "label": "Card description",     "default": "Comfortable, wearable supports that gently realign the spine and shoulder girdle — helping you build lasting posture habits throughout the day." },
+
+    { "type": "header",  "content": "Collection 2: Smart Posture Tech" },
+    { "type": "text",    "id": "col2_handle",   "label": "Collection handle",    "default": "smart-posture-tech" },
+    { "type": "text",    "id": "col2_tag",      "label": "Category tag",         "default": "Wearable Technology" },
+    { "type": "text",    "id": "col2_title",    "label": "Card title",           "default": "Smart Posture Tech" },
+    { "type": "textarea","id": "col2_desc",     "label": "Card description",     "default": "Sensor-driven wearables that monitor your posture in real time and give gentle, intelligent feedback — so your body learns without you thinking about it." },
+
+    { "type": "header",  "content": "Collection 3: Training and Rehab" },
+    { "type": "text",    "id": "col3_handle",   "label": "Collection handle",    "default": "posture-training-rehab" },
+    { "type": "text",    "id": "col3_tag",      "label": "Category tag",         "default": "Training & Recovery" },
+    { "type": "text",    "id": "col3_title",    "label": "Card title",           "default": "Posture Training & Rehab" },
+    { "type": "textarea","id": "col3_desc",     "label": "Card description",     "default": "Targeted rehab tools and training aids designed to strengthen the muscles that hold you upright — bridging the gap between injury and full recovery." },
+
+    { "type": "header",  "content": "Collection 4: Ergonomic Products" },
+    { "type": "text",    "id": "col4_handle",   "label": "Collection handle",    "default": "ergonomic-products" },
+    { "type": "text",    "id": "col4_tag",      "label": "Category tag",         "default": "Workspace Wellness" },
+    { "type": "text",    "id": "col4_title",    "label": "Card title",           "default": "Ergonomic Products" },
+    { "type": "textarea","id": "col4_desc",     "label": "Card description",     "default": "Desks, cushions, supports and accessories designed around the human body — making every workspace a place your body actually thrives in." },
+
+    { "type": "header",  "content": "Collection 5: Back Pain Relief" },
+    { "type": "text",    "id": "col5_handle",   "label": "Collection handle",    "default": "back-pain-relief" },
+    { "type": "text",    "id": "col5_tag",      "label": "Category tag",         "default": "Pain Management" },
+    { "type": "text",    "id": "col5_title",    "label": "Card title",           "default": "Back Pain Relief" },
+    { "type": "textarea","id": "col5_desc",     "label": "Card description",     "default": "From TENS therapy devices and heated back wraps to lumbar compression belts — our most powerful collection for anyone dealing with persistent or acute back pain. Drug-free, clinically inspired and built to last." }
+  ],
+  "presets": [{ "name": "VexoraCare · Catalog", "category": "VexoraCare" }]
+}
+{% endschema %}

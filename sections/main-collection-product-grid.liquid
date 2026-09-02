@@ -1,0 +1,585 @@
+<!-- SEARCH AND FILTER BAR -->
+<div class="vx-search-filter-container">
+  <div class="vx-search-wrapper">
+    <svg class="vx-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"></circle>
+      <path d="m21 21-4.35-4.35"></path>
+    </svg>
+    <input 
+      type="text" 
+      class="vx-search-input" 
+      id="vx-product-search"
+      placeholder="Search products..."
+    >
+  </div>
+  <div class="vx-filter-dropdown-wrapper">
+    <button class="vx-filter-btn" id="vx-filter-toggle">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="4" y1="6" x2="20" y2="6"></line>
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="18" x2="20" y2="18"></line>
+      </svg>
+      <span>Filters</span>
+      <svg class="vx-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+
+    <div class="vx-filter-dropdown" id="vx-filter-dropdown">
+      <div class="vx-dropdown-item" data-filter="trending">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+          <polyline points="17 6 23 6 23 12"></polyline>
+        </svg>
+        Trending
+      </div>
+      <div class="vx-dropdown-item" data-filter="price-high-low">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M19 12l-7 7-7-7"></path>
+        </svg>
+        Price: High to Low
+      </div>
+      <div class="vx-dropdown-item" data-filter="price-low-high">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 19V5M5 12l7-7 7 7"></path>
+        </svg>
+        Price: Low to High
+      </div>
+      <div class="vx-dropdown-item" data-filter="newest">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        Newest
+      </div>
+      <div class="vx-dropdown-item" data-filter="a-z">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 4h6v6H3V4zm12 0h6v6h-6V4zm0 12h6v6h-6v-6zM3 16h6v6H3v-6z"></path>
+        </svg>
+        A - Z
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="collection-grid" id="vxgrid-{{ section.id }}">
+  {% if collection.products_count > 0 %}
+    <div class="products-wrapper">
+
+      {% for product in collection.products %}
+      {% assign variant = product.selected_or_first_available_variant %}
+
+      <div class="product-card">
+
+        <a href="{{ product.url }}" class="pc-link">
+          <div class="pc-image">
+            <img src="{{ product.featured_image | img_url: '540x' }}" alt="{{ product.title }}" loading="lazy">
+          </div>
+
+          <div class="pc-info">
+            <h3 class="pc-title">{{ product.title }}</h3>
+
+            <p class="pc-price">
+              {% if product.compare_at_price > product.price %}
+                <span class="pc-sale-price">{{ product.price | money }}</span>
+                <span class="pc-old-price">{{ product.compare_at_price | money }}</span>
+              {% else %}
+                <span class="pc-sale-price">{{ product.price | money }}</span>
+              {% endif %}
+            </p>
+          </div>
+        </a>
+
+        <!-- ADD TO CART BUTTON -->
+        <button 
+          class="vx-atc-btn"
+          data-variant="{{ variant.id }}"
+          data-title="{{ product.title | escape }}"
+          {% unless product.available %}disabled{% endunless %}
+        >
+          <span class="vx-spinner"></span>
+          <span class="vx-text">Add to Cart</span>
+        </button>
+
+      </div>
+      {% endfor %}
+
+    </div>
+  {% else %}
+    <p class="no-products">No products found in this collection.</p>
+  {% endif %}
+</div>
+<style>
+.collection-grid {
+  padding: 15px;
+  background: #FFF3E4;
+}
+
+/* SEARCH AND FILTER BAR */
+.vx-search-filter-container {
+  display: flex;
+  gap: 12px;
+  padding: 15px;
+  background: #FFF3E4;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.vx-search-wrapper {
+  flex: 1;
+  min-width: 150px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 999px;
+  padding: 0 14px;
+  box-shadow: 0 2px 8px rgba(249,115,22,0.1);
+  transition: all 0.3s ease;
+}
+
+.vx-search-wrapper:focus-within {
+  box-shadow: 0 4px 16px rgba(249,115,22,0.2);
+}
+
+.vx-search-icon {
+  width: 18px;
+  height: 18px;
+  color: #999;
+  flex-shrink: 0;
+  margin-right: 8px;
+}
+
+.vx-search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  padding: 10px 0;
+  color: #333;
+  outline: none;
+  font-family: inherit;
+  min-width: 0;
+}
+
+.vx-search-input::placeholder {
+  color: #bbb;
+}
+
+@media (max-width: 480px) {
+  .vx-search-filter-container {
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .vx-search-wrapper {
+    padding: 0 10px;
+  }
+
+  .vx-search-input {
+    font-size: 13px;
+  }
+
+  .vx-filter-dropdown-wrapper {
+    flex-shrink: 1;
+  }
+}
+
+.vx-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #F97316;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.vx-filter-btn:hover {
+  background: #ea6a10;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(249,115,22,0.3);
+}
+
+.vx-filter-btn:active {
+  transform: translateY(0);
+}
+
+.vx-filter-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.vx-chevron {
+  width: 14px !important;
+  height: 14px !important;
+  transition: transform 0.3s ease;
+}
+
+.vx-filter-dropdown-wrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.vx-filter-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+  margin-top: 8px;
+  display: none;
+  z-index: 1000;
+  overflow: hidden;
+  animation: slideDown 0.2s ease;
+}
+
+.vx-filter-dropdown.active {
+  display: block;
+}
+
+.vx-filter-dropdown-wrapper.open .vx-chevron {
+  transform: rotate(180deg);
+}
+
+.vx-filter-dropdown-wrapper.open .vx-filter-btn {
+  background: #ea6a10;
+}
+
+.vx-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+.vx-dropdown-item:hover {
+  background: #FFF3E4;
+  border-left-color: #F97316;
+}
+
+.vx-dropdown-item.active {
+  background: #FFF3E4;
+  border-left-color: #F97316;
+  font-weight: 600;
+}
+
+.vx-dropdown-item svg {
+  width: 16px;
+  height: 16px;
+  color: #F97316;
+  flex-shrink: 0;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.products-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.product-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  padding-bottom: 10px;
+  box-shadow: 0 6px 18px rgba(249,115,22,0.12);
+}
+
+.pc-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.pc-image img {
+  width: 100%;
+}
+
+.pc-info {
+  padding: 10px;
+}
+
+.pc-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.pc-sale-price {
+  font-weight: 700;
+}
+
+.pc-old-price {
+  text-decoration: line-through;
+  color: #aaa;
+  margin-left: 6px;
+  font-size: 12px;
+}
+
+/* ADD TO CART BUTTON */
+.vx-atc-btn {
+  width: calc(100% - 20px);
+  margin: 0 10px;
+  background: #F97316;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: 0.2s;
+}
+
+.vx-atc-btn:hover {
+  background: #ea6a10;
+}
+
+.vx-atc-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.vx-spinner {
+  display: none;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+.vx-atc-btn.loading .vx-spinner {
+  display: block;
+}
+
+.vx-atc-btn.loading .vx-text {
+  opacity: 0.5;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+</style>
+<script>
+(function(){
+  // FILTER DROPDOWN FUNCTIONALITY
+  const filterBtn = document.getElementById('vx-filter-toggle');
+  const filterDropdown = document.getElementById('vx-filter-dropdown');
+  const dropdownWrapper = filterBtn.parentElement;
+  const dropdownItems = document.querySelectorAll('.vx-dropdown-item');
+  const productsWrapper = document.querySelector('.products-wrapper');
+  const productCards = document.querySelectorAll('.product-card');
+
+  // Toggle dropdown
+  filterBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    dropdownWrapper.classList.toggle('open');
+    filterDropdown.classList.toggle('active');
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!dropdownWrapper.contains(e.target)) {
+      dropdownWrapper.classList.remove('open');
+      filterDropdown.classList.remove('active');
+    }
+  });
+
+  // Dropdown item click handlers
+  dropdownItems.forEach(item => {
+    item.addEventListener('click', function(e) {
+      e.preventDefault();
+      const filterType = this.getAttribute('data-filter');
+
+      // Update active state
+      dropdownItems.forEach(i => i.classList.remove('active'));
+      this.classList.add('active');
+
+      // Close dropdown
+      dropdownWrapper.classList.remove('open');
+      filterDropdown.classList.remove('active');
+
+      // Apply filter
+      applyFilter(filterType);
+    });
+  });
+
+  function applyFilter(filterType) {
+    const cards = Array.from(document.querySelectorAll('.product-card'));
+
+    // Sort based on filter type
+    switch(filterType) {
+      case 'trending':
+        // Default order (as loaded from Shopify)
+        cards.sort((a, b) => 0);
+        break;
+
+      case 'price-high-low':
+        cards.sort((a, b) => {
+          const priceA = extractPrice(a);
+          const priceB = extractPrice(b);
+          return priceB - priceA;
+        });
+        break;
+
+      case 'price-low-high':
+        cards.sort((a, b) => {
+          const priceA = extractPrice(a);
+          const priceB = extractPrice(b);
+          return priceA - priceB;
+        });
+        break;
+
+      case 'newest':
+        cards.sort((a, b) => {
+          // Sort by data attribute if available, otherwise by DOM order
+          const dateA = new Date(a.getAttribute('data-created') || 0);
+          const dateB = new Date(b.getAttribute('data-created') || 0);
+          return dateB - dateA;
+        });
+        break;
+
+      case 'a-z':
+        cards.sort((a, b) => {
+          const titleA = a.querySelector('.pc-title').textContent.trim();
+          const titleB = b.querySelector('.pc-title').textContent.trim();
+          return titleA.localeCompare(titleB);
+        });
+        break;
+    }
+
+    // Re-render products in sorted order
+    cards.forEach(card => {
+      productsWrapper.appendChild(card);
+    });
+  }
+
+  function extractPrice(card) {
+    const priceText = card.querySelector('.pc-sale-price').textContent;
+    // Remove currency symbols and convert to number
+    return parseFloat(priceText.replace(/[^0-9.-]+/g, '')) || 0;
+  }
+
+  // SEARCH FUNCTIONALITY
+  const searchInput = document.getElementById('vx-product-search');
+
+  if(searchInput) {
+    searchInput.addEventListener('input', function(e) {
+      const searchTerm = e.target.value.toLowerCase();
+      let visibleCount = 0;
+
+      productCards.forEach(card => {
+        const title = card.querySelector('.pc-title').textContent.toLowerCase();
+        const matches = title.includes(searchTerm);
+        
+        if(searchTerm === '' || matches) {
+          card.style.display = '';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Show no results message if needed
+      let noResults = productsWrapper.querySelector('.vx-no-results');
+      
+      if(visibleCount === 0 && searchTerm !== '') {
+        if(!noResults) {
+          noResults = document.createElement('p');
+          noResults.className = 'vx-no-results';
+          noResults.textContent = 'No products found matching your search.';
+          noResults.style.gridColumn = '1 / -1';
+          noResults.style.textAlign = 'center';
+          noResults.style.color = '#666';
+          noResults.style.padding = '20px';
+          productsWrapper.appendChild(noResults);
+        }
+      } else if(noResults) {
+        noResults.remove();
+      }
+    });
+  }
+
+  // ADD TO CART BUTTON FUNCTIONALITY
+  document.querySelectorAll('.vx-atc-btn').forEach(function(btn){
+
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+
+      var variantId = btn.getAttribute('data-variant');
+      var title = btn.getAttribute('data-title') || 'Product';
+
+      if(!variantId) return;
+
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: parseInt(variantId),
+          quantity: 1
+        })
+      })
+      .then(res => res.json())
+      .then(() => {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+
+        btn.querySelector('.vx-text').textContent = '✓ Added';
+
+        setTimeout(() => {
+          btn.querySelector('.vx-text').textContent = 'Add to Cart';
+        }, 1500);
+
+        document.dispatchEvent(new CustomEvent('cart:updated'));
+      })
+      .catch(() => {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+      });
+
+    });
+
+  });
+})();
+document.addEventListener('cart:updated', function() {
+
+  // Method 2: fallback click
+  const btn = document.querySelector('.header-cart-button, .cart-icon, .vxnav-cart-btn, [data-cart-trigger]');
+  if (btn) btn.click();
+
+});
+</script>

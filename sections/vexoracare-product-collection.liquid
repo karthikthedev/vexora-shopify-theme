@@ -1,0 +1,201 @@
+<div class="collection-grid" id="vxgrid-{{ section.id }}">
+  {% if collection.products_count > 0 %}
+    <div class="products-wrapper">
+
+      {% for product in collection.products %}
+      {% assign variant = product.selected_or_first_available_variant %}
+
+      <div class="product-card">
+
+        <a href="{{ product.url }}" class="pc-link">
+          <div class="pc-image">
+            <img src="{{ product.featured_image | img_url: '540x' }}" alt="{{ product.title }}" loading="lazy">
+          </div>
+
+          <div class="pc-info">
+            <h3 class="pc-title">{{ product.title }}</h3>
+
+            <p class="pc-price">
+              {% if product.compare_at_price > product.price %}
+                <span class="pc-sale-price">{{ product.price | money }}</span>
+                <span class="pc-old-price">{{ product.compare_at_price | money }}</span>
+              {% else %}
+                <span class="pc-sale-price">{{ product.price | money }}</span>
+              {% endif %}
+            </p>
+          </div>
+        </a>
+
+        <!-- ADD TO CART BUTTON -->
+        <button 
+          class="vx-atc-btn"
+          data-variant="{{ variant.id }}"
+          data-title="{{ product.title | escape }}"
+          {% unless product.available %}disabled{% endunless %}
+        >
+          <span class="vx-spinner"></span>
+          <span class="vx-text">Add to Cart</span>
+        </button>
+
+      </div>
+      {% endfor %}
+
+    </div>
+  {% else %}
+    <p class="no-products">No products found in this collection.</p>
+  {% endif %}
+</div>
+<style>
+.collection-grid {
+  padding: 15px;
+  background: #FFF3E4;
+}
+
+.products-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.product-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  padding-bottom: 10px;
+  box-shadow: 0 6px 18px rgba(249,115,22,0.12);
+}
+
+.pc-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.pc-image img {
+  width: 100%;
+}
+
+.pc-info {
+  padding: 10px;
+}
+
+.pc-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.pc-sale-price {
+  font-weight: 700;
+}
+
+.pc-old-price {
+  text-decoration: line-through;
+  color: #aaa;
+  margin-left: 6px;
+  font-size: 12px;
+}
+
+/* ADD TO CART BUTTON */
+.vx-atc-btn {
+  width: calc(100% - 20px);
+  margin: 0 10px;
+  background: #F97316;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: 0.2s;
+}
+
+.vx-atc-btn:hover {
+  background: #ea6a10;
+}
+
+.vx-atc-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.vx-spinner {
+  display: none;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+.vx-atc-btn.loading .vx-spinner {
+  display: block;
+}
+
+.vx-atc-btn.loading .vx-text {
+  opacity: 0.5;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+</style>
+<script>
+(function(){
+  document.querySelectorAll('.vx-atc-btn').forEach(function(btn){
+
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+
+      var variantId = btn.getAttribute('data-variant');
+      var title = btn.getAttribute('data-title') || 'Product';
+
+      if(!variantId) return;
+
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: parseInt(variantId),
+          quantity: 1
+        })
+      })
+      .then(res => res.json())
+      .then(() => {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+
+        btn.querySelector('.vx-text').textContent = '✓ Added';
+
+        setTimeout(() => {
+          btn.querySelector('.vx-text').textContent = 'Add to Cart';
+        }, 1500);
+
+        document.dispatchEvent(new CustomEvent('cart:updated'));
+      })
+      .catch(() => {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+      });
+
+    });
+
+  });
+})();
+document.addEventListener('cart:updated', function() {
+
+
+  // Method 2: fallback click
+  const btn = document.querySelector('.header-cart-button, .cart-icon, .vxnav-cart-btn, [data-cart-trigger]');
+  if (btn) btn.click();
+
+});
+</script>

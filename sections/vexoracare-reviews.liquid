@@ -1,0 +1,1024 @@
+{% comment %}
+  ╔══════════════════════════════════════════════════════════════════╗
+  ║  VEXORACARE — Product Reviews Section                            ║
+  ║  File: sections/vexoracare-reviews.liquid                        ║
+  ║  Metafield: custom.product_reviews (list.metaobject_reference)   ║
+  ╚══════════════════════════════════════════════════════════════════╝
+{% endcomment %}
+
+{%- liquid
+  assign reviews_meta = product.metafields.custom.product_reviews.value
+  assign total        = 0
+  assign sum          = 0
+  assign count_5      = 0
+  assign count_4      = 0
+  assign count_3      = 0
+  assign count_2      = 0
+  assign count_1      = 0
+
+  if reviews_meta != blank
+    assign total = reviews_meta.size
+    for r in reviews_meta
+      assign r_rating = r.rating.value | default: r.rating | times: 1.0
+      assign sum = sum | plus: r_rating
+      assign r_rating_round = r_rating | round
+
+      case r_rating_round
+        when 5
+          assign count_5 = count_5 | plus: 1
+        when 4
+          assign count_4 = count_4 | plus: 1
+        when 3
+          assign count_3 = count_3 | plus: 1
+        when 2
+          assign count_2 = count_2 | plus: 1
+        when 1
+          assign count_1 = count_1 | plus: 1
+      endcase
+    endfor
+  endif
+
+  assign avg_raw = 0.0
+  if total > 0
+    assign avg_raw = sum | times: 1.0 | divided_by: total 
+  endif
+  assign avg_str  = avg_raw | round: 1
+  assign avg_int  = avg_raw | floor
+  assign avg_frac = avg_raw | minus: avg_int
+
+  assign pct_5 = 0
+  assign pct_4 = 0
+  assign pct_3 = 0
+  assign pct_2 = 0
+  assign pct_1 = 0
+  if total > 0
+    assign pct_5 = count_5 | times: 100 | divided_by: total
+    assign pct_4 = count_4 | times: 100 | divided_by: total
+    assign pct_3 = count_3 | times: 100 | divided_by: total
+    assign pct_2 = count_2 | times: 100 | divided_by: total
+    assign pct_1 = count_1 | times: 100 | divided_by: total
+  endif
+-%}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  .vxrev {
+    --bg:      #FFF3E4;
+    --white:   #FFFFFF;
+    --ink:     #111827;
+    --ink-70:  rgba(17,24,39,.70);
+    --ink-45:  rgba(17,24,39,.45);
+    --ink-12:  rgba(17,24,39,.12);
+    --ink-06:  rgba(17,24,39,.06);
+    --pri:     #F97316;
+    --sec:     #FB923C;
+    --star:    #F59E0B;
+    --star-e:  #D1D5DB;
+    --success: #10B981;
+    --f-disp:  'Playfair Display', Georgia, serif;
+    --f-body:  'Jost', system-ui, sans-serif;
+    --ease:    cubic-bezier(.22,1,.36,1);
+    --r:       16px;
+    background: var(--bg);
+    font-family: var(--f-body);
+    padding: 80px 0 100px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* subtle grain */
+  .vxrev::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0;
+  }
+
+  .vxrev__inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative; z-index: 1;
+  }
+
+  /* ── Section header ── */
+  .vxrev__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 52px;
+    flex-wrap: wrap;
+  }
+  .vxrev__eyebrow {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: .20em; text-transform: uppercase;
+    color: var(--pri); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 9px;
+  }
+  .vxrev__eyebrow::before {
+    content: ''; display: block;
+    width: 26px; height: 1.5px;
+    background: var(--pri); border-radius: 2px;
+  }
+  .vxrev__title {
+    font-family: var(--f-disp);
+    font-size: clamp(1.9rem, 3vw, 3rem);
+    font-weight: 700; color: var(--ink);
+    line-height: 1.08; letter-spacing: -.02em; margin: 0;
+  }
+
+  /* ── Write review btn ── */
+  .vxrev__write-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 13px 26px; border-radius: 100px;
+    background: var(--pri); color: var(--white);
+    font-family: var(--f-body); font-size: 14px; font-weight: 600;
+    text-decoration: none; border: none; cursor: pointer;
+    transition: background .2s, transform .2s, box-shadow .2s;
+    box-shadow: 0 6px 20px rgba(249,115,22,.26);
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .vxrev__write-btn:hover {
+    background: #e8660d;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(249,115,22,.34);
+  }
+
+  /* ── Dropdown Form ── */
+  .vxrev__dropdown {
+    margin-top: 32px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .5s var(--ease), opacity .5s ease;
+    opacity: 0;
+    background: var(--white);
+    border: 1px solid var(--ink-12);
+    border-radius: 20px;
+    padding: 0;
+  }
+  .vxrev__dropdown.is-open {
+    max-height: 1200px;
+    opacity: 1;
+    padding: 40px;
+  }
+  .vxrev__dropdown-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .vxrev__dropdown-field {
+    margin-bottom: 0;
+  }
+  .vxrev__dropdown-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .vxrev__dropdown-star-picker {
+    display: flex;
+    gap: 6px;
+  }
+  .vxrev__dropdown-star-btn {
+    background: none;
+    border: none;
+    padding: 2px;
+    cursor: pointer;
+    color: var(--star-e);
+    transition: color .15s, transform .15s;
+  }
+  .vxrev__dropdown-star-btn.is-lit {
+    color: var(--star);
+  }
+  .vxrev__dropdown-star-btn:hover {
+    transform: scale(1.15);
+  }
+  .vxrev__dropdown-input,
+  .vxrev__dropdown-textarea {
+    width: 100%;
+    font-family: var(--f-body);
+    font-size: 14.5px;
+    color: var(--ink);
+    background: var(--white);
+    border: 1.5px solid var(--ink-12);
+    border-radius: 12px;
+    padding: 12px 16px;
+    transition: border-color .2s;
+    outline: none;
+    resize: vertical;
+  }
+  .vxrev__dropdown-input:focus,
+  .vxrev__dropdown-textarea:focus {
+    border-color: var(--pri);
+  }
+  .vxrev__dropdown-textarea {
+    min-height: 110px;
+  }
+  .vxrev__dropdown-submit {
+    width: 100%;
+    padding: 15px;
+    background: var(--pri);
+    color: var(--white);
+    font-family: var(--f-body);
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: background .2s, transform .2s, box-shadow .2s;
+    box-shadow: 0 8px 24px rgba(249,115,22,.28);
+    margin-top: 8px;
+  }
+  .vxrev__dropdown-submit:hover {
+    background: #e8660d;
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px rgba(249,115,22,.36);
+  }
+  .vxrev__image-preview-wrapper {
+    margin-top: 12px;
+    display: none;
+  }
+  .vxrev__image-preview-wrapper img {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+  .vxrev__remove-image-btn {
+    margin-top: 8px;
+    padding: 6px 12px;
+    background: #EF4444;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  /* ── Summary panel ── */
+  .vxrev__summary {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    background: transparent;
+    border: none;
+    border-radius: 24px;
+    padding: 20px 0;
+    margin-bottom: 48px;
+  }
+
+  /* Score block */
+  .vxrev__score {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 8px;
+    padding-right: 0;
+    border-right: none;
+  }
+  .vxrev__score-num {
+    font-family: var(--f-disp);
+    font-size: 2.2rem; font-weight: 700;
+    color: var(--ink); line-height: 1;
+    letter-spacing: -.04em;
+  }
+  .vxrev__score-stars { display: flex; gap: 4px; }
+  .vxrev__score-label {
+    font-size: 13px; color: var(--ink-70);
+    font-weight: 400; text-align: center;
+    line-height: 1.4;
+  }
+  .vxrev__score-label strong { color: var(--ink); font-weight: 600; }
+
+  /* Breakdown bars - hidden */
+  .vxrev__bars { display: none; }
+
+  /* ── Sort / filter row ── */
+  .vxrev__toolbar {
+    display: flex; align-items: center;
+    justify-content: space-between; gap: 16px;
+    margin-bottom: 28px; flex-wrap: wrap;
+  }
+  .vxrev__count-label {
+    font-size: 14px; color: var(--ink-70); font-weight: 400;
+  }
+  .vxrev__count-label strong { color: var(--ink); font-weight: 600; }
+  .vxrev__sort {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--ink-70);
+  }
+  .vxrev__sort-select {
+    font-family: var(--f-body); font-size: 13px; font-weight: 500;
+    color: var(--ink); background: var(--white);
+    border: 1.5px solid var(--ink-12); border-radius: 10px;
+    padding: 8px 14px; cursor: pointer;
+    appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+    transition: border-color .2s;
+  }
+  .vxrev__sort-select:focus { outline: none; border-color: var(--pri); }
+
+  /* ── Review cards grid ── */
+  .vxrev__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+
+  .vxrev__card {
+    background: var(--white);
+    border: 1px solid var(--ink-12);
+    border-radius: 20px;
+    padding: 28px;
+    display: flex; flex-direction: column; gap: 14px;
+    transition: transform .3s var(--ease), box-shadow .3s, border-color .3s;
+    position: relative; overflow: hidden;
+  }
+  .vxrev__card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--pri), transparent);
+    opacity: 0; transition: opacity .3s;
+  }
+  .vxrev__card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 44px rgba(17,24,39,.08);
+    border-color: rgba(249,115,22,.20);
+  }
+  .vxrev__card:hover::before { opacity: 1; }
+
+  /* Featured (first) card spans full width */
+  .vxrev__card--featured {
+    grid-column: 1 / -1;
+    flex-direction: row; gap: 28px; align-items: flex-start;
+    background: linear-gradient(135deg, rgba(249,115,22,.04) 0%, var(--white) 60%);
+    border-color: rgba(249,115,22,.18);
+  }
+  .vxrev__card--featured::before { opacity: .6; }
+  .vxrev__card--featured .vxrev__card-main { flex: 1; display: flex; flex-direction: column; gap: 14px; }
+  .vxrev__card--featured .vxrev__card-aside {
+    display: flex; flex-direction: column; align-items: flex-end;
+    gap: 10px; flex-shrink: 0; padding-top: 2px;
+  }
+
+  /* Card top row */
+  .vxrev__card-top {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 12px;
+  }
+  .vxrev__author {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .vxrev__avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--f-disp); font-size: 1.1rem; font-weight: 700;
+    color: var(--white); flex-shrink: 0;
+    overflow: hidden; background-size: cover; background-position: center;
+  }
+  .vxrev__avatar img {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .vxrev__author-info {}
+  .vxrev__author-name {
+    font-size: 14px; font-weight: 600; color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .vxrev__verified {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 600; color: var(--success);
+    letter-spacing: .03em;
+  }
+  .vxrev__verified svg { flex-shrink: 0; }
+
+  .vxrev__card-meta {
+    display: flex; flex-direction: column;
+    align-items: flex-end; gap: 4px; flex-shrink: 0;
+  }
+  .vxrev__card-stars { display: flex; gap: 2px; }
+  .vxrev__card-date {
+    font-size: 11.5px; color: var(--ink-45); font-weight: 300;
+  }
+
+  .vxrev__card-title {
+    font-family: var(--f-disp);
+    font-size: 1.05rem; font-weight: 700;
+    color: var(--ink); line-height: 1.25; margin: 0;
+  }
+  .vxrev__card-body {
+    font-size: 14px; line-height: 1.74;
+    color: var(--ink-70); font-weight: 300; margin: 0;
+  }
+  .vxrev__card-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 600;
+    color: var(--pri); background: rgba(249,115,22,.09);
+    padding: 4px 12px; border-radius: 100px;
+    width: fit-content; letter-spacing: .03em;
+  }
+
+  /* Helpful row */
+  .vxrev__helpful {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 12px; color: var(--ink-45);
+    margin-top: auto; padding-top: 4px;
+  }
+  .vxrev__helpful-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: var(--f-body); font-size: 12px; font-weight: 500;
+    color: var(--ink-70); background: var(--ink-06);
+    border: none; border-radius: 100px; padding: 5px 12px;
+    cursor: pointer; transition: background .2s, color .2s;
+  }
+  .vxrev__helpful-btn:hover { background: rgba(249,115,22,.12); color: var(--pri); }
+  .vxrev__helpful-btn.is-active { background: rgba(249,115,22,.12); color: var(--pri); }
+
+  /* ── Empty state ── */
+  .vxrev__empty {
+    text-align: center; padding: 64px 24px;
+    background: var(--white); border: 1px solid var(--ink-12);
+    border-radius: 24px;
+  }
+  .vxrev__empty-icon {
+    width: 64px; height: 64px; border-radius: 18px;
+    background: rgba(249,115,22,.09);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+  }
+  .vxrev__empty h3 {
+    font-family: var(--f-disp); font-size: 1.4rem;
+    font-weight: 700; color: var(--ink); margin: 0 0 10px;
+  }
+  .vxrev__empty p {
+    font-size: 15px; color: var(--ink-45);
+    font-weight: 300; margin: 0 0 28px;
+  }
+
+  /* ── Load more ── */
+  .vxrev__more-wrap {
+    text-align: center; margin-top: 12px;
+  }
+  .vxrev__more-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--f-body); font-size: 14px; font-weight: 500;
+    color: var(--ink); background: var(--white);
+    border: 1.5px solid var(--ink-12); border-radius: 100px;
+    padding: 13px 30px; cursor: pointer;
+    transition: border-color .2s, color .2s, background .2s;
+  }
+  .vxrev__more-btn:hover { border-color: var(--pri); color: var(--pri); background: rgba(249,115,22,.04); }
+
+  /* ── Write review modal ── */
+.vxrev__modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(10, 14, 23, 0.78);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 90000;
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s ease;
+}
+  .vxrev__modal-backdrop.is-open { opacity: 1; pointer-events: all; }
+  .vxrev__modal {
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%, -44%) scale(.96);
+    width: min(560px, calc(100vw - 32px));
+    max-height: calc(100vh - 48px); overflow-y: auto;
+    background: var(--white); border-radius: 24px;
+    padding: 40px; z-index: 90001;
+    box-shadow: 0 32px 80px rgba(17,24,39,.18);
+    transition: transform .38s var(--ease), opacity .3s ease;
+    opacity: 0; pointer-events: none;
+  }
+  .vxrev__modal.is-open {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1; pointer-events: all;
+  }
+  .vxrev__modal-head {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 12px; margin-bottom: 28px;
+  }
+  .vxrev__modal-title {
+    font-family: var(--f-disp); font-size: 1.6rem;
+    font-weight: 700; color: var(--ink); letter-spacing: -.01em;
+  }
+  .vxrev__modal-close {
+    width: 34px; height: 34px; border-radius: 10px;
+    background: var(--ink-06); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink-70); flex-shrink: 0;
+    transition: background .2s, color .2s;
+  }
+  .vxrev__modal-close:hover { background: rgba(249,115,22,.12); color: var(--pri); }
+  .vxrev__modal-note {
+    background: rgba(249,115,22,.08); border: 1px solid rgba(249,115,22,.18);
+    border-radius: 14px; padding: 16px 18px; margin-bottom: 24px;
+    font-size: 13.5px; line-height: 1.6; color: var(--ink-70);
+  }
+  .vxrev__modal-note strong { color: var(--ink); font-weight: 600; }
+  .vxrev__modal-note a { color: var(--pri); text-decoration: none; font-weight: 600; }
+  .vxrev__modal-note a:hover { text-decoration: underline; }
+
+  /* star picker */
+  .vxrev__modal-field { margin-bottom: 20px; }
+  .vxrev__modal-label {
+    display: block; font-size: 12px; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--ink); margin-bottom: 8px;
+  }
+  .vxrev__star-picker { display: flex; gap: 6px; }
+  .vxrev__star-pick-btn {
+    background: none; border: none; padding: 2px; cursor: pointer;
+    color: var(--star-e); transition: color .15s, transform .15s;
+  }
+  .vxrev__star-pick-btn.is-lit { color: var(--star); }
+  .vxrev__star-pick-btn:hover { transform: scale(1.15); }
+  .vxrev__modal-input,
+  .vxrev__modal-textarea {
+    width: 100%; font-family: var(--f-body); font-size: 14.5px;
+    color: var(--ink); background: var(--white);
+    border: 1.5px solid var(--ink-12); border-radius: 12px;
+    padding: 12px 16px; transition: border-color .2s;
+    outline: none; resize: vertical;
+  }
+  .vxrev__modal-input:focus,
+  .vxrev__modal-textarea:focus { border-color: var(--pri); }
+  .vxrev__modal-textarea { min-height: 110px; }
+  .vxrev__modal-submit {
+    width: 100%; padding: 15px;
+    background: var(--pri); color: var(--white);
+    font-family: var(--f-body); font-size: 15px; font-weight: 700;
+    border: none; border-radius: 100px; cursor: pointer;
+    transition: background .2s, transform .2s, box-shadow .2s;
+    box-shadow: 0 8px 24px rgba(249,115,22,.28);
+    margin-top: 8px;
+  }
+  .vxrev__modal-submit:hover {
+    background: #e8660d;
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px rgba(249,115,22,.36);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 860px) {
+    .vxrev { padding: 60px 0 80px; }
+    .vxrev__inner { padding: 0 20px; }
+    .vxrev__summary {
+      flex-direction: column;
+      gap: 20px; padding: 20px 0;
+    }
+    .vxrev__score { border-right: none; padding-right: 0; border-bottom: none; padding-bottom: 0; }
+    .vxrev__grid { grid-template-columns: 1fr; }
+    .vxrev__card--featured { flex-direction: column; }
+    .vxrev__card--featured .vxrev__card-aside { align-items: flex-start; }
+    .vxrev__head { flex-direction: column; align-items: flex-start; gap: 18px; }
+    .vxrev__dropdown.is-open { max-height: 1400px; padding: 30px; }
+  }
+  @media (max-width: 480px) {
+    .vxrev__score-num { font-size: 2rem; }
+    .vxrev__dropdown.is-open { max-height: 1500px; padding: 20px; }
+    .vxrev__dropdown-label { font-size: 11px; }
+    .vxrev__dropdown-input, .vxrev__dropdown-textarea { font-size: 14px; }
+  }
+</style>
+
+<section class="vxrev" id="vxrev-{{ section.id }}" aria-label="Customer Reviews">
+  <div class="vxrev__inner">
+
+    {%- comment -%} ── HEADER ── {%- endcomment -%}
+    <div class="vxrev__head">
+      <div>
+        <div class="vxrev__eyebrow">Customer Reviews</div>
+        <h2 class="vxrev__title">{{ section.settings.section_title | default: 'What our customers say' }}</h2>
+      </div>
+      <button class="vxrev__write-btn" id="vxrev-write-btn-{{ section.id }}" type="button">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 14h3l8-8-3-3-8 8v3z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Write a Review
+      </button>
+    </div>
+
+    {%- comment -%} ── DROPDOWN FORM ── {%- endcomment -%}
+    <div class="vxrev__dropdown" id="vxrev-dropdown-{{ section.id }}">
+      <form class="vxrev__dropdown-form" id="vxrev-dropdown-form-{{ section.id }}" novalidate>
+        <div class="vxrev__dropdown-field">
+          <label class="vxrev__dropdown-label">Rating *</label>
+          <div class="vxrev__dropdown-star-picker" id="vxrev-dropdown-stars-{{ section.id }}" role="radiogroup" aria-label="Rating">
+            {%- for i in (1..5) -%}
+              <button type="button" class="vxrev__dropdown-star-btn" data-star="{{ i }}" aria-label="{{ i }} star{% if i != 1 %}s{% endif %}">
+                 <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><path d="M9 1.5l2.1 5.5H17l-4.3 3.2 1.6 5.3L9 13.2l-4.3 3.3 1.6-5.3L2 7h5.9L9 1.5z"/></svg>
+              </button>
+            {%- endfor -%}
+          </div>
+        </div>
+        <div class="vxrev__dropdown-field">
+          <label class="vxrev__dropdown-label" for="vxrev-dropdown-name-{{ section.id }}">Full Name *</label>
+          <input type="text" class="vxrev__dropdown-input" id="vxrev-dropdown-name-{{ section.id }}" name="name" placeholder="e.g. Sarah Miller" required autocomplete="name">
+        </div>
+        <div class="vxrev__dropdown-field">
+          <label class="vxrev__dropdown-label" for="vxrev-dropdown-email-{{ section.id }}">Email *</label>
+          <input type="email" class="vxrev__dropdown-input" id="vxrev-dropdown-email-{{ section.id }}" name="email" placeholder="e.g. sarah@example.com" required autocomplete="email">
+        </div>
+        <div class="vxrev__dropdown-field">
+          <label class="vxrev__dropdown-label" for="vxrev-dropdown-body-{{ section.id }}">Review *</label>
+          <textarea class="vxrev__dropdown-textarea" id="vxrev-dropdown-body-{{ section.id }}" name="body" placeholder="Share your honest experience — what did you love? What could be better?" required minlength="20"></textarea>
+        </div>
+        <div class="vxrev__dropdown-field">
+          <label class="vxrev__dropdown-label" for="vxrev-dropdown-image-{{ section.id }}">Upload Photo (optional)</label>
+          <input type="file" class="vxrev__dropdown-input" id="vxrev-dropdown-image-{{ section.id }}" name="image" accept="image/*" style="padding: 8px 12px;">
+          <div class="vxrev__image-preview-wrapper" id="vxrev-dropdown-preview-{{ section.id }}">
+            <img id="vxrev-dropdown-preview-img-{{ section.id }}" src="" alt="Preview">
+            <button type="button" class="vxrev__remove-image-btn" id="vxrev-dropdown-remove-image-{{ section.id }}">Remove image</button>
+          </div>
+        </div>
+        <button type="submit" class="vxrev__dropdown-submit">Submit Review</button>
+      </form>
+    </div>
+
+    {%- if reviews_meta != blank and total > 0 -%}
+
+      {%- comment -%} ── SUMMARY ── {%- endcomment -%}
+      <div class="vxrev__summary">
+
+        <div class="vxrev__score">
+          <div class="vxrev__score-num" aria-label="{{ avg_str }} out of 5">{{ avg_str }}</div>
+          <div class="vxrev__score-stars" aria-hidden="true">
+            {%- assign avg_plus = avg_raw | plus: 0.75 -%}
+
+{%- for i in (1..5) -%}
+  {%- assign i_f = i | times: 1.0 -%}
+
+  {%- if i_f <= avg_raw -%}
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="#F59E0B">
+      <path d="M10 1l2.4 6.3H19l-5.4 4 2 6.3L10 13.5l-5.6 4.1 2-6.3L1 7.3h6.6L10 1z"/>
+    </svg>
+
+  {%- elsif i_f <= avg_plus -%}
+    <svg width="20" height="20" viewBox="0 0 20 20">
+      <defs>
+        <linearGradient id="vxhalf{{ i }}-{{ section.id }}">
+          <stop offset="50%" stop-color="#F59E0B"/>
+          <stop offset="50%" stop-color="#D1D5DB"/>
+        </linearGradient>
+      </defs>
+      <path d="M10 1l2.4 6.3H19l-5.4 4 2 6.3L10 13.5l-5.6 4.1 2-6.3L1 7.3h6.6L10 1z"
+            fill="url(#vxhalf{{ i }}-{{ section.id }})"/>
+    </svg>
+
+  {%- else -%}
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="#D1D5DB">
+      <path d="M10 1l2.4 6.3H19l-5.4 4 2 6.3L10 13.5l-5.6 4.1 2-6.3L1 7.3h6.6L10 1z"/>
+    </svg>
+  {%- endif -%}
+
+{%- endfor -%}
+          </div>
+          <div class="vxrev__score-label">
+            <strong>{{ avg_str }} out of 5</strong><br>
+            Based on {{ total }} review{% if total != 1 %}s{% endif %}
+          </div>
+        </div>
+
+
+
+      </div>
+
+      {%- comment -%} ── TOOLBAR ── {%- endcomment -%}
+      <div class="vxrev__toolbar">
+        <p class="vxrev__count-label">Showing <strong>{{ total }}</strong> review{% if total != 1 %}s{% endif %}</p>
+        <div class="vxrev__sort">
+          <span>Sort by</span>
+          <select class="vxrev__sort-select" id="vxrev-sort-{{ section.id }}" aria-label="Sort reviews">
+            <option value="recent">Most Recent</option>
+            <option value="highest">Highest Rated</option>
+            <option value="lowest">Lowest Rated</option>
+          </select>
+        </div>
+      </div>
+
+      {%- comment -%} ── REVIEW CARDS ── {%- endcomment -%}
+      <div class="vxrev__grid" id="vxrev-grid-{{ section.id }}">
+        {%- assign avatar_colors = '#F97316,#FB923C|#0EA5E9,#38BDF8|#8B5CF6,#A78BFA|#10B981,#34D399|#EC4899,#F9A8D4|#EF4444,#FCA5A5|#F59E0B,#FCD34D|#06B6D4,#67E8F9' | split: '|' -%}
+
+        {%- for review in reviews_meta -%}
+          {%- assign r_name   = review.name   | default: review.metafields.name   | default: 'Customer' -%}
+          {%- assign r_rating = review.rating  | default: review.metafields.rating  | plus: 0 | round -%}
+          {%- assign r_title  = review.title   | default: review.metafields.title   | default: '' -%}
+          {%- assign r_body   = review.body    | default: review.metafields.body    | default: '' -%}
+          {%- assign r_date   = review.date    | default: review.metafields.date    | default: '' -%}
+          {%- assign color_idx = forloop.index0 | modulo: 8 -%}
+          {%- assign color_pair = avatar_colors[color_idx] | split: ',' -%}
+          {%- assign initial = r_name | slice: 0 | upcase -%}
+
+          {%- assign r_image = review.image.value | default: review.image | default: '' -%}
+          <article
+            class="vxrev__card{% if forloop.first %} vxrev__card--featured{% endif %}"
+            data-rating="{{ r_rating }}"
+            data-index="{{ forloop.index0 }}"
+            style="{% if r_image != blank %}display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: start;{% endif %}"
+          >
+            <div>
+              <div class="vxrev__card-top">
+                <div class="vxrev__author">
+                  <div class="vxrev__avatar" aria-hidden="true" style="background:linear-gradient(135deg,{{ color_pair[0] }},{{ color_pair[1] }});">
+                    {{ initial }}
+                  </div>
+                  <div class="vxrev__author-info">
+                    <div class="vxrev__author-name">{{ r_name }}</div>
+                    <div class="vxrev__verified">
+                      <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true">
+                        <circle cx="5.5" cy="5.5" r="5" fill="#10B981"/>
+                        <path d="M3 5.5l2 2 3.5-3.5" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                      Verified Buyer
+                    </div>
+                  </div>
+                </div>
+
+                <div class="vxrev__card-meta">
+                  <div class="vxrev__card-stars" aria-label="{{ r_rating }} out of 5 stars">
+                    {%- for s in (1..5) -%}
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="{% if s <= r_rating %}#F59E0B{% else %}#D1D5DB{% endif %}" aria-hidden="true">
+                        <path d="M7 .5l1.7 4.2H13l-3.7 2.7 1.4 4.2L7 9.2 3.3 11.6l1.4-4.2L1 4.7h4.3z"/>
+                      </svg>
+                    {%- endfor -%}
+                  </div>
+                  {%- if r_date != blank -%}
+                    <time class="vxrev__card-date" datetime="{{ r_date }}">{{ r_date }}</time>
+                  {%- endif -%}
+                </div>
+              </div>
+
+            {%- if forloop.first -%}
+              <div class="vxrev__card-main" style="margin-top:0;">
+            {%- endif -%}
+
+              {%- if r_title != blank -%}
+                <p class="vxrev__card-title">{{ r_title }}</p>
+              {%- endif -%}
+
+              {%- if r_body != blank -%}
+                <p class="vxrev__card-body">{{ r_body }}</p>
+              {%- endif -%}
+
+              <span class="vxrev__card-tag" aria-label="Review tag">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                  <path d="M1.5 5l2.5 3 5-5.5" stroke="#F97316" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                {{ section.settings.review_tag | default: 'Verified Purchase' }}
+              </span>
+
+              <div class="vxrev__helpful" aria-label="Was this review helpful?">
+                <span>Helpful?</span>
+                <button class="vxrev__helpful-btn" data-id="{{ forloop.index }}" aria-label="Yes, helpful" type="button">
+                  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M1 12V6.5l2.5-5h1.5l-.5 3.5H11a1 1 0 0 1 1 1v.5l-2 5H1z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Yes
+                </button>
+              </div>
+            </div>
+            {%- if r_image != blank -%}
+              <img src="{{ r_image | img_url: '240x240' }}" alt="Photo by {{ r_name }}" loading="lazy" style="width: 120px; height: 120px; border-radius: 12px; object-fit: cover; flex-shrink: 0;">
+            {%- endif -%}
+
+          </article>
+
+        {%- endfor -%}
+      </div>
+
+      {%- if total > 4 -%}
+        <div class="vxrev__more-wrap">
+          <button class="vxrev__more-btn" id="vxrev-more-{{ section.id }}" type="button">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Show more reviews
+          </button>
+        </div>
+      {%- endif -%}
+
+
+
+    {%- else -%}
+
+      {%- comment -%} ── EMPTY STATE ── {%- endcomment -%}
+      <div class="vxrev__empty">
+        <div class="vxrev__empty-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <path d="M14 2l3 7h7.5l-6 4.5 2.3 7L14 16.8l-6.8 3.7 2.3-7L3.5 9H11z" stroke="#F97316" stroke-width="1.7" fill="none" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>No reviews yet</h3>
+        <p>Be the first to share your experience with this product.</p>
+        <button class="vxrev__write-btn" id="vxrev-write-btn-empty-{{ section.id }}" type="button">
+          Write the first review
+        </button>
+      </div>
+
+    {%- endif -%}
+
+  </div>
+</section>
+
+<script>
+(function () {
+  'use strict';
+
+  var sid = '{{ section.id }}';
+
+  /* ── Dropdown toggle ── */
+  var writeBtn  = document.getElementById('vxrev-write-btn-' + sid);
+  var dropdown  = document.getElementById('vxrev-dropdown-' + sid);
+  var writeEmpty= document.getElementById('vxrev-write-btn-empty-' + sid);
+
+  function toggleDropdown() {
+    dropdown.classList.toggle('is-open');
+    if (dropdown.classList.contains('is-open')) {
+      writeBtn.textContent = '';
+      writeBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 14h3l8-8-3-3-8 8v3z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Hide Review';
+      var first = dropdown.querySelector('input, button, textarea, select');
+      if (first && first.type !== 'button') setTimeout(function () { first.focus(); }, 100);
+    } else {
+      writeBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 14h3l8-8-3-3-8 8v3z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Write a Review';
+    }
+  }
+
+  if (writeBtn) writeBtn.addEventListener('click', toggleDropdown);
+  if (writeEmpty) writeEmpty.addEventListener('click', toggleDropdown);
+
+  /* ── Star picker ── */
+  var starBtns = document.querySelectorAll('#vxrev-dropdown-stars-' + sid + ' .vxrev__dropdown-star-btn');
+  var chosenStar = 0;
+  starBtns.forEach(function (btn) {
+    btn.addEventListener('mouseenter', function () { litStars(parseInt(btn.getAttribute('data-star'), 10)); });
+    btn.addEventListener('mouseleave', function () { litStars(chosenStar); });
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      chosenStar = parseInt(btn.getAttribute('data-star'), 10);
+      litStars(chosenStar);
+    });
+  });
+  function litStars(n) {
+    starBtns.forEach(function (b) {
+      b.classList.toggle('is-lit', parseInt(b.getAttribute('data-star'), 10) <= n);
+    });
+  }
+
+  /* ── Form submit ── */
+  var form = document.getElementById('vxrev-dropdown-form-' + sid);
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (chosenStar === 0) { alert('Please select a star rating.'); return; }
+      
+      var btn = form.querySelector('.vxrev__dropdown-submit');
+      btn.textContent = 'Submitting…';
+      btn.disabled = true;
+      setTimeout(function () {
+        btn.textContent = 'Submitted';
+        btn.style.background = '#10B981';
+        setTimeout(function () {
+          btn.textContent = 'Submit Review';
+          btn.style.background = '';
+          btn.disabled = false;
+          form.reset();
+          chosenStar = 0;
+          litStars(0);
+          dropdown.classList.remove('is-open');
+          writeBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 14h3l8-8-3-3-8 8v3z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Write a Review';
+        }, 1500);
+      }, 800);
+    });
+  }
+
+  /* ── Sort reviews (client-side) ── */
+  var sortSel = document.getElementById('vxrev-sort-' + sid);
+  var grid    = document.getElementById('vxrev-grid-' + sid);
+  if (sortSel && grid) {
+    sortSel.addEventListener('change', function () {
+      var cards = Array.from(grid.querySelectorAll('.vxrev__card:not(.vxrev__card--featured)'));
+      var featured = grid.querySelector('.vxrev__card--featured');
+      cards.sort(function (a, b) {
+        var ra = parseInt(a.getAttribute('data-rating'), 10);
+        var rb = parseInt(b.getAttribute('data-rating'), 10);
+        var ia = parseInt(a.getAttribute('data-index'), 10);
+        var ib = parseInt(b.getAttribute('data-index'), 10);
+        if (sortSel.value === 'highest') return rb - ra;
+        if (sortSel.value === 'lowest')  return ra - rb;
+        return ia - ib; /* recent = original order */
+      });
+      if (featured) grid.insertBefore(featured, grid.firstChild);
+      cards.forEach(function (c) { grid.appendChild(c); });
+    });
+  }
+
+  /* ── Helpful button toggle ── */
+  document.querySelectorAll('#vxrev-' + sid + ' .vxrev__helpful-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      btn.classList.toggle('is-active');
+      var svg = btn.querySelector('svg');
+      var wasFilled = btn.classList.contains('is-active');
+      btn.innerHTML = (wasFilled
+        ? '<svg width="13" height="13" viewBox="0 0 13 13" fill="currentColor"><path d="M1 12V6.5l2.5-5h1.5l-.5 3.5H11a1 1 0 0 1 1 1v.5l-2 5H1z"/></svg> Yes'
+        : '<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 12V6.5l2.5-5h1.5l-.5 3.5H11a1 1 0 0 1 1 1v.5l-2 5H1z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg> Yes'
+      );
+    });
+  });
+
+  /* ── Show more / less ── */
+  var moreBtn = document.getElementById('vxrev-more-' + sid);
+  var allCards = grid ? Array.from(grid.querySelectorAll('.vxrev__card')) : [];
+  var showingAll = false;
+  var INITIAL_SHOW = 5; /* featured (full-width) + 4 grid cards */
+
+  if (moreBtn && allCards.length > INITIAL_SHOW) {
+    allCards.forEach(function (c, i) { if (i >= INITIAL_SHOW) c.style.display = 'none'; });
+    moreBtn.addEventListener('click', function () {
+      showingAll = !showingAll;
+      allCards.forEach(function (c, i) {
+        if (i >= INITIAL_SHOW) c.style.display = showingAll ? '' : 'none';
+      });
+      moreBtn.innerHTML = showingAll
+        ? '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M12 10L8 6l-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Show fewer reviews'
+        : '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Show more reviews';
+    });
+  } else if (moreBtn) {
+    moreBtn.style.display = 'none';
+  }
+
+  /* ── Image upload preview ── */
+  var imageInput = document.getElementById('vxrev-dropdown-image-' + sid);
+  var imagePreview = document.getElementById('vxrev-dropdown-preview-' + sid);
+  var previewImg = document.getElementById('vxrev-dropdown-preview-img-' + sid);
+  var removeBtn = document.getElementById('vxrev-dropdown-remove-image-' + sid);
+
+  if (imageInput) {
+    imageInput.addEventListener('change', function (e) {
+      var file = e.target.files[0];
+      if (file) {
+        var reader = new FileReader();
+        reader.onload = function (evt) {
+          previewImg.src = evt.target.result;
+          imagePreview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  if (removeBtn) {
+    removeBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      imageInput.value = '';
+      imagePreview.style.display = 'none';
+    });
+  }
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "VexoraCare Reviews",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section title",
+      "default": "What our customers say"
+    },
+    {
+      "type": "text",
+      "id": "review_tag",
+      "label": "Review badge label",
+      "default": "Verified Purchase"
+    },
+    {
+      "type": "header",
+      "content": "Metafield info"
+    },
+    {
+      "type": "paragraph",
+      "content": "This section reads reviews from: product.metafields.custom.product_reviews — set up a metaobject definition in Shopify Admin with fields: name (single_line_text), rating (number_integer), title (single_line_text), body (multi_line_text), date (single_line_text), image (file_reference). The image field is optional but enables the customer photos gallery below reviews."
+    }
+  ],
+  "presets": [
+    {
+      "name": "VexoraCare Reviews",
+      "category": "VexoraCare"
+    }
+  ]
+}
+{% endschema %}

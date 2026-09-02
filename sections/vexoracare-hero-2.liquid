@@ -1,0 +1,679 @@
+{% comment %}
+  ╔══════════════════════════════════════════════════════════════╗
+  ║  VEXORACARE — Hero Section 2                                  ║
+  ║  File: sections/vexoracare-hero-2.liquid                      ║
+  ║  Install: Place DIRECTLY BELOW Hero 1 in the Theme Editor     ║
+  ║  The SVG wave connector creates a seamless flow between them  ║
+  ╚══════════════════════════════════════════════════════════════╝
+{% endcomment %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,700;1,300;1,700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ─── Tokens ─────────────────────────────────────────────────── */
+#vxh2-{{ section.id }} {
+  --bg:        #FFF3E4;
+  --dark:      #0E1117;
+  --dark-2:    #161B24;
+  --primary:   #F97316;
+  --secondary: #FB923C;
+  --white:     #FFFFFF;
+  --ink:       #111827;
+  --ink-60:    rgba(17,24,39,0.60);
+  --muted:     rgba(255,255,255,0.48);
+  --border:    rgba(255,255,255,0.07);
+  --font-disp: 'Playfair Display', Georgia, serif;
+  --font-body: 'Jost', sans-serif;
+}
+
+/* ─── Wave connector (Section 1 → Section 2) ─────────────────── */
+.vxh2-wave-in {
+  display: block;
+  line-height: 0;
+  background: #FFF3E4; /* matches Section 1 bg */
+  margin-bottom: -2px;
+}
+.vxh2-wave-in svg { width: 100%; display: block; }
+
+/* ─── Section shell ──────────────────────────────────────────── */
+#vxh2-{{ section.id }} {
+  background: var(--dark);
+  position: relative;
+  font-family: var(--font-body);
+  overflow: hidden;
+}
+
+/* Background texture dots */
+#vxh2-{{ section.id }}::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(249,115,22,0.08) 1px, transparent 1px);
+  background-size: 34px 34px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ambient glow */
+#vxh2-{{ section.id }} .vxh2-glow {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+#vxh2-{{ section.id }} .vxh2-glow-a {
+  top: -80px; left: 50%;
+  transform: translateX(-50%);
+  width: 800px; height: 400px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(249,115,22,0.14) 0%, transparent 65%);
+}
+#vxh2-{{ section.id }} .vxh2-glow-b {
+  bottom: 40px; right: -100px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(251,146,60,0.07) 0%, transparent 65%);
+}
+
+/* ─── Container ──────────────────────────────────────────────── */
+#vxh2-{{ section.id }} .vxh2-wrap {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 100px 48px 0;
+  position: relative;
+  z-index: 2;
+}
+
+/* ─── Section header ─────────────────────────────────────────── */
+#vxh2-{{ section.id }} .vxh2-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: end;
+  gap: 40px;
+  margin-bottom: 64px;
+}
+#vxh2-{{ section.id }} .vxh2-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--secondary);
+  margin-bottom: 20px;
+}
+#vxh2-{{ section.id }} .vxh2-tag::before {
+  content: '';
+  display: block;
+  width: 28px; height: 1.5px;
+  background: var(--secondary);
+  border-radius: 2px;
+}
+#vxh2-{{ section.id }} .vxh2-title {
+  font-family: var(--font-disp);
+  font-size: clamp(2.4rem, 4vw, 4.2rem);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.05;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+#vxh2-{{ section.id }} .vxh2-title em {
+  font-style: italic;
+  color: var(--primary);
+}
+#vxh2-{{ section.id }} .vxh2-header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 20px;
+}
+#vxh2-{{ section.id }} .vxh2-desc {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--muted);
+  font-weight: 300;
+  margin: 0;
+}
+#vxh2-{{ section.id }} .vxh2-header-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 12px 26px;
+  border-radius: 100px;
+  border: 1.5px solid rgba(255,255,255,0.16);
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+  letter-spacing: 0.03em;
+}
+#vxh2-{{ section.id }} .vxh2-header-cta:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(249,115,22,0.07);
+}
+#vxh2-{{ section.id }} .vxh2-header-cta svg { transition: transform 0.2s; }
+#vxh2-{{ section.id }} .vxh2-header-cta:hover svg { transform: translateX(4px); }
+
+/* ─── Category cards ─────────────────────────────────────────── */
+#vxh2-{{ section.id }} .vxh2-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 80px;
+}
+
+#vxh2-{{ section.id }} .vxh2-card {
+  position: relative;
+  background: var(--dark-2);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 36px 30px 32px;
+  overflow: hidden;
+  transition: transform 0.35s cubic-bezier(.22,1,.36,1), border-color 0.3s, background 0.3s;
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+}
+#vxh2-{{ section.id }} .vxh2-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 10%, var(--primary) 50%, transparent 90%);
+  transform: scaleX(0);
+  transition: transform 0.35s ease;
+  border-radius: 2px;
+}
+#vxh2-{{ section.id }} .vxh2-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(249,115,22,0.2);
+  background: #1a2030;
+}
+#vxh2-{{ section.id }} .vxh2-card:hover::before { transform: scaleX(1); }
+
+/* Card ghost number */
+#vxh2-{{ section.id }} .vxh2-card-num {
+  position: absolute;
+  bottom: 16px; right: 20px;
+  font-family: var(--font-disp);
+  font-size: 5.5rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.032);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  transition: color 0.3s;
+}
+#vxh2-{{ section.id }} .vxh2-card:hover .vxh2-card-num {
+  color: rgba(249,115,22,0.06);
+}
+
+/* Card icon */
+#vxh2-{{ section.id }} .vxh2-card-icon {
+  width: 54px; height: 54px;
+  border-radius: 14px;
+  background: rgba(249,115,22,0.12);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 24px;
+  transition: background 0.3s;
+  flex-shrink: 0;
+}
+#vxh2-{{ section.id }} .vxh2-card:hover .vxh2-card-icon {
+  background: rgba(249,115,22,0.22);
+}
+
+#vxh2-{{ section.id }} .vxh2-card-title {
+  font-family: var(--font-disp);
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--white);
+  margin: 0 0 12px;
+  line-height: 1.2;
+}
+#vxh2-{{ section.id }} .vxh2-card-body {
+  font-size: 14px;
+  line-height: 1.72;
+  color: rgba(255,255,255,0.50);
+  margin: 0 0 auto;
+  font-weight: 300;
+  padding-bottom: 24px;
+}
+
+#vxh2-{{ section.id }} .vxh2-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  text-decoration: none;
+  transition: gap 0.2s, color 0.2s;
+  margin-top: 4px;
+}
+#vxh2-{{ section.id }} .vxh2-card-link:hover {
+  gap: 14px;
+  color: var(--primary);
+}
+
+/* ─── Feature strip ──────────────────────────────────────────── */
+#vxh2-{{ section.id }} .vxh2-strip {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 48px;
+  align-items: center;
+  padding-bottom: 0;
+}
+
+/* Benefit list columns */
+#vxh2-{{ section.id }} .vxh2-benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+#vxh2-{{ section.id }} .vxh2-benefits--right {
+  align-items: flex-end;
+}
+
+#vxh2-{{ section.id }} .vxh2-benefit {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 50px;
+  padding: 11px 20px;
+  max-width: 280px;
+  transition: border-color 0.2s, background 0.2s;
+}
+#vxh2-{{ section.id }} .vxh2-benefit:hover {
+  border-color: rgba(249,115,22,0.20);
+  background: rgba(249,115,22,0.05);
+}
+#vxh2-{{ section.id }} .vxh2-benefit-icon {
+  width: 28px; height: 28px; flex-shrink: 0;
+  border-radius: 50%;
+  background: rgba(249,115,22,0.18);
+  display: flex; align-items: center; justify-content: center;
+}
+#vxh2-{{ section.id }} .vxh2-benefit span {
+  font-size: 13px;
+  color: rgba(255,255,255,0.70);
+  line-height: 1.4;
+  font-weight: 300;
+}
+#vxh2-{{ section.id }} .vxh2-benefits--right .vxh2-benefit {
+  flex-direction: row-reverse;
+}
+#vxh2-{{ section.id }} .vxh2-benefits--right .vxh2-benefit span {
+  text-align: right;
+}
+
+/* Center image */
+#vxh2-{{ section.id }} .vxh2-img-wrap {
+  width: 260px;
+  flex-shrink: 0;
+  position: relative;
+}
+#vxh2-{{ section.id }} .vxh2-img-box {
+  width: 100%;
+  aspect-ratio: 3/4;
+  border-radius: 28px;
+  overflow: hidden;
+  border: 1px solid rgba(249,115,22,0.18);
+  background: rgba(249,115,22,0.06);
+  position: relative;
+}
+#vxh2-{{ section.id }} .vxh2-img-box img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.7s cubic-bezier(.22,1,.36,1);
+}
+#vxh2-{{ section.id }} .vxh2-img-wrap:hover .vxh2-img-box img {
+  transform: scale(1.06);
+}
+#vxh2-{{ section.id }} .vxh2-img-placeholder {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 12px;
+}
+#vxh2-{{ section.id }} .vxh2-img-placeholder p {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Center badge */
+#vxh2-{{ section.id }} .vxh2-img-badge {
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary);
+  color: var(--white);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 9px 22px;
+  border-radius: 100px;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(249,115,22,0.42);
+}
+
+/* ─── Wave out (back to light) ───────────────────────────────── */
+.vxh2-wave-out {
+  display: block;
+  line-height: 0;
+  margin-top: 100px;
+}
+.vxh2-wave-out svg { width: 100%; display: block; }
+
+/* ─── Scroll-reveal ──────────────────────────────────────────── */
+.vxh2-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s cubic-bezier(.22,1,.36,1),
+              transform 0.65s cubic-bezier(.22,1,.36,1);
+}
+.vxh2-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+.vxh2-d1 { transition-delay: 0.08s; }
+.vxh2-d2 { transition-delay: 0.18s; }
+.vxh2-d3 { transition-delay: 0.28s; }
+.vxh2-d4 { transition-delay: 0.38s; }
+.vxh2-d5 { transition-delay: 0.46s; }
+
+/* ─── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 960px) {
+  #vxh2-{{ section.id }} .vxh2-header {
+    grid-template-columns: 1fr;
+  }
+  #vxh2-{{ section.id }} .vxh2-header-right {
+    align-items: flex-start;
+  }
+  #vxh2-{{ section.id }} .vxh2-cards {
+    grid-template-columns: 1fr;
+  }
+  #vxh2-{{ section.id }} .vxh2-strip {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+  #vxh2-{{ section.id }} .vxh2-benefits { order: 2; align-items: center; }
+  #vxh2-{{ section.id }} .vxh2-benefits--right { order: 3; align-items: center; }
+  #vxh2-{{ section.id }} .vxh2-img-wrap { order: 1; }
+  #vxh2-{{ section.id }} .vxh2-benefits--right .vxh2-benefit { flex-direction: row; }
+  #vxh2-{{ section.id }} .vxh2-benefits--right .vxh2-benefit span { text-align: left; }
+  #vxh2-{{ section.id }} .vxh2-wrap { padding: 80px 20px 0; }
+}
+</style>
+
+{%- comment -%}
+  ╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+  SEAMLESS WAVE TRANSITION — connects Hero 1 to Hero 2
+  The top wave's fill (#FFF3E4) matches Hero 1's background
+  ╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+{%- endcomment -%}
+<div class="vxh2-wave-in" aria-hidden="true">
+  <svg viewBox="0 0 1440 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,0 C240,90 480,0 720,55 C960,90 1200,10 1440,50 L1440,90 L0,90 Z" fill="#0E1117"/>
+  </svg>
+</div>
+
+<section id="vxh2-{{ section.id }}" aria-label="{{ section.settings.aria_label | default: 'VexoraCare Product Range' }}">
+
+  <div class="vxh2-glow vxh2-glow-a" aria-hidden="true"></div>
+  <div class="vxh2-glow vxh2-glow-b" aria-hidden="true"></div>
+
+  <div class="vxh2-wrap">
+
+    <!-- ── Section Header ── -->
+    <div class="vxh2-header vxh2-reveal">
+      <div>
+        <div class="vxh2-tag">{{ section.settings.tag | default: 'Built for performance' }}</div>
+        <h2 class="vxh2-title">
+          {{ section.settings.title_line1 | default: 'Three pillars of' }}<br>
+          <em>{{ section.settings.title_italic | default: 'total wellness.' }}</em>
+        </h2>
+      </div>
+      <div class="vxh2-header-right">
+        <p class="vxh2-desc">{{ section.settings.header_desc | default: 'Every product in the VexoraCare range targets a real problem — poor posture, stubborn tension or persistent pain — with smart, body-first engineering.' }}</p>
+        <a href="{{ section.settings.header_cta_url | default: '/collections/all' }}" class="vxh2-header-cta">
+          {{ section.settings.header_cta_label | default: 'View all products' }}
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── Category Cards ── -->
+    <div class="vxh2-cards">
+
+      {%- comment -%} Card 1 {%- endcomment -%}
+      <div class="vxh2-card vxh2-reveal vxh2-d1">
+        <span class="vxh2-card-num">01</span>
+        <div class="vxh2-card-icon">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13 3a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM9.5 10h7l-1 5.5h-5L9.5 10zM10.5 15.5l-2.5 7.5h2l1.5-5h3l1.5 5h2l-2.5-7.5" stroke="#F97316" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3 class="vxh2-card-title">{{ section.settings.c1_title | default: 'Posture Correctors' }}</h3>
+        <p class="vxh2-card-body">{{ section.settings.c1_body | default: 'Retrain your spine and build better muscle memory. Worn invisibly under clothing, our posture range reduces slouching and relieves neck and upper-back strain within weeks.' }}</p>
+        <a href="{{ section.settings.c1_url | default: '/collections/posture' }}" class="vxh2-card-link">
+          Shop posture
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      {%- comment -%} Card 2 {%- endcomment -%}
+      <div class="vxh2-card vxh2-reveal vxh2-d2">
+        <span class="vxh2-card-num">02</span>
+        <div class="vxh2-card-icon">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="13" cy="13" rx="6" ry="9" stroke="#F97316" stroke-width="1.6"/>
+            <path d="M4 13h3M19 13h3M13 4v3M13 19v3" stroke="#F97316" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="13" cy="13" r="2.5" fill="#F97316" fill-opacity="0.3" stroke="#F97316" stroke-width="1.2"/>
+          </svg>
+        </div>
+        <h3 class="vxh2-card-title">{{ section.settings.c2_title | default: 'Massagers & Recovery' }}</h3>
+        <p class="vxh2-card-body">{{ section.settings.c2_body | default: 'Percussive therapy, heated massage and targeted vibration tools. Break down lactic acid, ease tension knots and speed up muscle recovery — on your schedule.' }}</p>
+        <a href="{{ section.settings.c2_url | default: '/collections/massagers' }}" class="vxh2-card-link">
+          Shop massagers
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      {%- comment -%} Card 3 {%- endcomment -%}
+      <div class="vxh2-card vxh2-reveal vxh2-d3">
+        <span class="vxh2-card-num">03</span>
+        <div class="vxh2-card-icon">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13 22.5l-1.8-1.6C6 16.2 2 12.5 2 8 2 5 4.5 2.5 7.5 2.5c1.9 0 3.7.9 5.5 2.7 1.8-1.8 3.6-2.7 5.5-2.7C21.5 2.5 24 5 24 8c0 4.5-4 8.2-9.2 12.9L13 22.5z" stroke="#F97316" stroke-width="1.6" fill="none"/>
+            <path d="M13 8v5M10.5 10.5h5" stroke="#F97316" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3 class="vxh2-card-title">{{ section.settings.c3_title | default: 'Pain Relief' }}</h3>
+        <p class="vxh2-card-body">{{ section.settings.c3_body | default: 'TENS therapy, heat wraps and smart compression — drug-free relief that targets the source of chronic back, joint and nerve pain rather than masking it.' }}</p>
+        <a href="{{ section.settings.c3_url | default: '/collections/pain-relief' }}" class="vxh2-card-link">
+          Shop pain relief
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- ── Feature Strip: Benefits + Image ── -->
+    <div class="vxh2-strip">
+
+      <!-- Left benefits -->
+      <div class="vxh2-benefits vxh2-reveal vxh2-d2">
+        {%- assign benefits_l = section.settings.bl1 | default: 'Reduces back pain in as little as 2 weeks'
+            | append: '|||'
+            | append: section.settings.bl2 | default: 'Developed with registered physiotherapists'
+            | append: '|||'
+            | append: section.settings.bl3 | default: 'Improves circulation & muscle flexibility' -%}
+        {%- assign bl_items = benefits_l | split: '|||' -%}
+        {%- for item in bl_items -%}
+          <div class="vxh2-benefit">
+            <div class="vxh2-benefit-icon">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2 6l3 3 5-5" stroke="#F97316" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <span>{{ item }}</span>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      <!-- Center product image -->
+      <div class="vxh2-img-wrap vxh2-reveal vxh2-d4">
+        <div class="vxh2-img-box">
+          {%- if section.settings.strip_image != blank -%}
+            <img
+              src="{{ section.settings.strip_image | img_url: '600x' }}"
+              alt="{{ section.settings.strip_image_alt | default: 'VexoraCare product in use' }}"
+              loading="lazy"
+            >
+          {%- else -%}
+            <div class="vxh2-img-placeholder">
+              <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="44" height="44" rx="12" fill="rgba(249,115,22,0.12)"/>
+                <path d="M10 34l8-11 6 7.5 4-5.5 6 9H10z" stroke="#F97316" stroke-width="1.6" stroke-linejoin="round" fill="none"/>
+                <circle cx="16" cy="19" r="3" stroke="#F97316" stroke-width="1.6" fill="none"/>
+              </svg>
+              <p>Your product image</p>
+            </div>
+          {%- endif -%}
+        </div>
+        <a
+  href="{{ section.settings.best_seller_link | default: 'products/hunchback-shoulder-opening-corrector' }}"
+  class="vxh2-img-badge"
+  aria-label="View {{ section.settings.strip_badge | default: 'Best Seller' }}"
+>
+  {{ section.settings.strip_badge | default: '✦ Best Seller' }}
+</a>
+</div>
+
+      <!-- Right benefits -->
+      <div class="vxh2-benefits vxh2-benefits--right vxh2-reveal vxh2-d3">
+        {%- assign benefits_r = section.settings.br1 | default: 'Suitable for all ages & fitness levels'
+            | append: '|||'
+            | append: section.settings.br2 | default: 'Lightweight, portable & travel-ready'
+            | append: '|||'
+            | append: section.settings.br3 | default: 'Free shipping on every order' -%}
+        {%- assign br_items = benefits_r | split: '|||' -%}
+        {%- for item in br_items -%}
+          <div class="vxh2-benefit">
+            <div class="vxh2-benefit-icon">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2 6l3 3 5-5" stroke="#F97316" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <span>{{ item }}</span>
+          </div>
+        {%- endfor -%}
+      </div>
+
+    </div>
+
+  </div><!-- /vxh2-wrap -->
+
+  {%- comment -%}
+    Wave out — transitions Hero 2 (dark) back to your site's
+    next section. Change the fill to match whatever follows.
+  {%- endcomment -%}
+  <div class="vxh2-wave-out" aria-hidden="true">
+    <svg viewBox="0 0 1440 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,50 C360,90 720,0 1080,60 C1260,90 1380,30 1440,10 L1440,90 L0,90 Z" fill="#FFF3E4"/>
+    </svg>
+  </div>
+
+</section>
+
+<script>
+  (function () {
+    var els = document.querySelectorAll('#vxh2-{{ section.id }} .vxh2-reveal');
+    if (!els.length || !('IntersectionObserver' in window)) {
+      els.forEach(function (el) { el.classList.add('is-visible'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.10 });
+    els.forEach(function (el) { io.observe(el); });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "VexoraCare · Hero 2",
+  "settings": [
+    { "type": "header",  "content": "Section heading" },
+    { "type": "text",    "id": "tag",              "label": "Tag line",             "default": "Built for performance" },
+    { "type": "text",    "id": "title_line1",      "label": "Title — line 1",       "default": "Three pillars of" },
+    { "type": "text",    "id": "title_italic",     "label": "Title — italic line",  "default": "total wellness." },
+    { "type": "textarea","id": "header_desc",      "label": "Description",          "default": "Every product in the VexoraCare range targets a real problem — poor posture, stubborn tension or persistent pain — with smart, body-first engineering." },
+    { "type": "text",    "id": "header_cta_label", "label": "Header CTA label",     "default": "View all products" },
+    { "type": "url",     "id": "header_cta_url",   "label": "Header CTA URL" },
+
+    { "type": "header",  "content": "Card 1 — Posture" },
+    { "type": "text",    "id": "c1_title", "label": "Title",  "default": "Posture Correctors" },
+    { "type": "textarea","id": "c1_body",  "label": "Body",   "default": "Retrain your spine and build better muscle memory. Worn invisibly under clothing, our posture range reduces slouching and relieves neck and upper-back strain within weeks." },
+    { "type": "url",     "id": "c1_url",   "label": "Link URL" },
+
+    { "type": "header",  "content": "Card 2 — Massagers" },
+    { "type": "text",    "id": "c2_title", "label": "Title",  "default": "Massagers & Recovery" },
+    { "type": "textarea","id": "c2_body",  "label": "Body",   "default": "Percussive therapy, heated massage and targeted vibration tools. Break down lactic acid, ease tension knots and speed up muscle recovery — on your schedule." },
+    { "type": "url",     "id": "c2_url",   "label": "Link URL" },
+
+    { "type": "header",  "content": "Card 3 — Pain Relief" },
+    { "type": "text",    "id": "c3_title", "label": "Title",  "default": "Pain Relief" },
+    { "type": "textarea","id": "c3_body",  "label": "Body",   "default": "TENS therapy, heat wraps and smart compression — drug-free relief that targets the source of chronic back, joint and nerve pain rather than masking it." },
+    { "type": "url",     "id": "c3_url",   "label": "Link URL" },
+
+    { "type": "header",       "content": "Centre Image" },
+    { "type": "image_picker", "id": "strip_image",     "label": "Product image (upload here)" },
+    { "type": "text",         "id": "strip_image_alt", "label": "Image alt text",    "default": "VexoraCare product in use" },
+    { "type": "text",         "id": "strip_badge",     "label": "Image badge label", "default": "✦ Best Seller" },
+
+    { "type": "header",  "content": "Left benefit pills" },
+    { "type": "text",    "id": "bl1", "label": "Benefit 1", "default": "Reduces back pain in as little as 2 weeks" },
+    { "type": "text",    "id": "bl2", "label": "Benefit 2", "default": "Developed with registered physiotherapists" },
+    { "type": "text",    "id": "bl3", "label": "Benefit 3", "default": "Improves circulation & muscle flexibility" },
+
+    { "type": "header",  "content": "Right benefit pills" },
+    { "type": "text",    "id": "br1", "label": "Benefit 4", "default": "Suitable for all ages & fitness levels" },
+    { "type": "text",    "id": "br2", "label": "Benefit 5", "default": "Lightweight, portable & travel-ready" },
+    { "type": "text",    "id": "br3", "label": "Benefit 6", "default": "Free shipping on every order" },
+
+    { "type": "text",    "id": "aria_label", "label": "Section aria label (accessibility)", "default": "VexoraCare Product Range" }
+  ],
+  "presets": [{ "name": "VexoraCare · Hero 2", "category": "VexoraCare" }]
+}
+{% endschema %}

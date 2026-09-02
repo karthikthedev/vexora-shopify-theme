@@ -1,0 +1,1431 @@
+{% comment %}
+  ╔══════════════════════════════════════════════════════════════════╗
+  ║  VEXORACARE — Product Page Design 2                              ║
+  ║  File: sections/product-page-design-2.liquid                     ║
+  ║  Assign on: templates/product.json                               ║
+  ╚══════════════════════════════════════════════════════════════════╝
+{% endcomment %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+{% comment %} ── Cart Added Popup ── {% endcomment %}
+<div id="vx2-popup" class="vx2-popup" aria-live="polite" aria-hidden="true" role="status">
+  <div class="vx2-popup-inner">
+    <div class="vx2-popup-check">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <circle cx="11" cy="11" r="10" fill="#F97316"/>
+        <path d="M6 11l3.5 3.5 6.5-7" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="vx2-popup-content">
+      <div class="vx2-popup-title">Added to cart!</div>
+      <div class="vx2-popup-sub" id="vx2-popup-sub">1 × item</div>
+    </div>
+    <div class="vx2-popup-actions">
+      <a href="/cart" class="vx2-popup-view">View Cart</a>
+      <a href="/checkout" class="vx2-popup-checkout">Checkout →</a>
+    </div>
+    <button class="vx2-popup-dismiss" id="vx2-popup-dismiss" aria-label="Dismiss">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</div>
+
+{% comment %} ── Image Lightbox ── {% endcomment %}
+<div class="vx2-lightbox" id="vx2-lightbox" aria-hidden="true" role="dialog" aria-label="Product image gallery">
+  <div class="vx2-lb-backdrop" id="vx2-lb-backdrop"></div>
+  <div class="vx2-lb-body">
+    <button class="vx2-lb-close" id="vx2-lb-close" aria-label="Close">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 2l14 14M16 2L2 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <button class="vx2-lb-nav vx2-lb-prev" id="vx2-lb-prev" aria-label="Previous image">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M11 4L5 9l6 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="vx2-lb-img-wrap" id="vx2-lb-img-wrap">
+      <img id="vx2-lb-img" src="" alt="" loading="eager">
+    </div>
+    <button class="vx2-lb-nav vx2-lb-next" id="vx2-lb-next" aria-label="Next image">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 4l6 5-6 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="vx2-lb-counter" id="vx2-lb-counter">1 / 1</div>
+  </div>
+</div>
+
+{% comment %} ── Main Page ── {% endcomment %}
+<div class="vx2-page" id="vx2-page">
+
+  
+
+  {%- comment -%} ══ TOP SPLIT ══ {%- endcomment -%}
+  <div class="vx2-container">
+    <div class="vx2-top-grid">
+
+      {%- comment -%} ── GALLERY COLUMN ── {%- endcomment -%}
+      <div class="vx2-gallery-col">
+
+        {%- comment -%} Thumbnail rail (left side on desktop) {%- endcomment -%}
+        {%- if product.images.size > 1 -%}
+          <div class="vx2-thumb-rail" id="vx2-thumb-rail" role="list" aria-label="Product image thumbnails">
+            {%- for img in product.images -%}
+              <button
+                class="vx2-thumb{% if forloop.first %} is-active{% endif %}"
+                data-index="{{ forloop.index0 }}"
+                data-src="{{ img | img_url: '1200x' }}"
+                data-alt="{{ img.alt | default: product.title | escape }}"
+                aria-label="View image {{ forloop.index }}"
+                role="listitem"
+              >
+                <img src="{{ img | img_url: '160x' }}" alt="{{ img.alt | default: product.title | escape }}" loading="{{ forloop.first | iif: 'eager', 'lazy' }}" width="72" height="72">
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Main image {%- endcomment -%}
+        <div class="vx2-main-img-col">
+          <div class="vx2-main-img-wrap" id="vx2-main-img-wrap">
+
+            {%- comment -%} Sale / tag badge {%- endcomment -%}
+            {%- if product.compare_at_price_max > product.price -%}
+              {%- assign pct = product.compare_at_price_max | minus: product.price | times: 100 | divided_by: product.compare_at_price_max | round -%}
+              <div class="vx2-img-badge vx2-img-badge--sale">−{{ pct }}%</div>
+            {%- elsif product.tags contains 'new' -%}
+              <div class="vx2-img-badge vx2-img-badge--new">New In</div>
+            {%- elsif product.tags contains 'bestseller' -%}
+              <div class="vx2-img-badge vx2-img-badge--best">Best Seller</div>
+            {%- endif -%}
+
+            {%- if product.images.size > 0 -%}
+              <img
+                id="vx2-hero-img"
+                src="{{ product.images.first | img_url: '1200x' }}"
+                alt="{{ product.images.first.alt | default: product.title | escape }}"
+                loading="eager"
+                fetchpriority="high"
+                class="vx2-hero-img"
+              >
+            {%- else -%}
+              <div class="vx2-img-placeholder">
+                <svg width="56" height="56" viewBox="0 0 56 56" fill="none"><rect width="56" height="56" rx="16" fill="rgba(249,115,22,0.12)"/><path d="M12 44l10-14 7 10 6-8 9 12H12z" stroke="#F97316" stroke-width="1.8" fill="none" stroke-linejoin="round"/><circle cx="20" cy="24" r="4" stroke="#F97316" stroke-width="1.6" fill="none"/></svg>
+                <p>No image available</p>
+              </div>
+            {%- endif -%}
+
+            {%- comment -%} Zoom & expand hint {%- endcomment -%}
+            <button class="vx2-expand-btn" id="vx2-expand-btn" aria-label="View full image">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 2h4v4M6 14H2v-4M14 2l-5 5M2 14l5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+
+            {%- comment -%} Mobile swipe dots {%- endcomment -%}
+            {%- if product.images.size > 1 -%}
+              <div class="vx2-swipe-dots" id="vx2-swipe-dots" aria-hidden="true">
+                {%- for img in product.images -%}
+                  <span class="vx2-dot{% if forloop.first %} is-active{% endif %}" data-index="{{ forloop.index0 }}"></span>
+                {%- endfor -%}
+              </div>
+              <div class="vx2-swipe-hint" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M8 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Swipe to browse
+              </div>
+            {%- endif -%}
+
+          </div>
+        </div>
+
+      </div>
+      {%- comment -%} /GALLERY {%- endcomment -%}
+
+      {%- comment -%} ── INFO PANEL ── {%- endcomment -%}
+      <div class="vx2-info-col">
+
+        {%- comment -%} Vendor + tags badges {%- endcomment -%}
+        <div class="vx2-meta-row">
+          {%- if product.vendor != blank -%}
+           
+          {%- endif -%}
+          {%- if product.tags contains 'new' -%}<span class="vx2-tag vx2-tag--new">New</span>{%- endif -%}
+          {%- if product.tags contains 'bestseller' -%}<span class="vx2-tag vx2-tag--best">Best Seller</span>{%- endif -%}
+        </div>
+
+        
+
+        {%- comment -%} Promotion Banner {%- endcomment -%}
+        <div class="vx2-promo-banner">
+          <div class="vx2-promo-inner">
+            <div class="vx2-promo-badge-wrap">
+              <span class="vx2-promo-badge">🎉 LIMITED TIME OFFER</span>
+            </div>
+            <p class="vx2-promo-text">Buy 1 Get 1 <span class="vx2-promo-highlight">FREE</span></p>
+          </div>
+        </div>
+
+        {%- comment -%} Title {%- endcomment -%}
+        <h1 class="vx2-title">{{ product.title }}</h1>
+
+        {%- comment -%} Short desc {%- endcomment -%}
+        
+
+        {%- comment -%} Price {%- endcomment -%}
+        <div class="vx2-price-block" id="vx2-price-block">
+          <span class="vx2-price" id="vx2-price">{{ product.selected_or_first_available_variant.price | money }}</span>
+          {%- if product.compare_at_price_max > product.price -%}
+            <span class="vx2-price-compare" id="vx2-price-compare">{{ product.compare_at_price_max | money }}</span>
+            <span class="vx2-price-save" id="vx2-price-save">Save {{ product.compare_at_price_max | minus: product.price | times: 100 | divided_by: product.compare_at_price_max | round }}%</span>
+          {%- endif -%}
+        </div>
+
+        {%- comment -%} Checkout Discount Notice {%- endcomment -%}
+        <div class="vx2-checkout-notice">
+          <div class="vx2-notice-icon">ℹ</div>
+          <div class="vx2-notice-content">
+            <p class="vx2-notice-title">How this offer works</p>
+            <p class="vx2-notice-text">Discount will be automatically calculated and applied at checkout • <span class="vx2-notice-highlight">Limited time only</span></p>
+          </div>
+        </div>
+
+        <div class="vx2-divider"></div>
+
+        {%- comment -%} Variant selectors {%- endcomment -%}
+        {%- unless product.has_only_default_variant -%}
+          <div class="vx2-variants" id="vx2-variants">
+            {%- for option in product.options_with_values -%}
+              <div class="vx2-opt-group">
+                <div class="vx2-opt-label">
+                  <span>{{ option.name }}</span>
+                  <span class="vx2-opt-selected" id="vx2-opt-sel-{{ forloop.index }}">{{ option.selected_value }}</span>
+                </div>
+                <div class="vx2-opt-pills" data-option-index="{{ forloop.index0 }}">
+                  {%- for value in option.values -%}
+                    <button
+                      class="vx2-opt-pill{% if option.selected_value == value %} is-active{% endif %}"
+                      data-value="{{ value | escape }}"
+                      data-option-index="{{ forloop.parentloop.index0 }}"
+                      data-option-label-id="vx2-opt-sel-{{ forloop.parentloop.index }}"
+                      type="button"
+                    >
+                      {%- if option.name == 'Color' or option.name == 'Colour' -%}
+                        <span class="vx2-swatch" style="background:{{ value | downcase | replace: ' ', '' }};"></span>
+                      {%- endif -%}
+                      {{ value }}
+                    </button>
+                  {%- endfor -%}
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endunless -%}
+
+        {%- comment -%} Qty + ATC {%- endcomment -%}
+        <div class="vx2-buy-row">
+          <div class="vx2-qty-wrap" role="group" aria-label="Quantity">
+            <button class="vx2-qty-btn" id="vx2-qty-dec" aria-label="Decrease quantity" type="button">−</button>
+            <input type="number" class="vx2-qty-input" id="vx2-qty" value="1" min="1" max="99" aria-label="Quantity" readonly>
+            <button class="vx2-qty-btn" id="vx2-qty-inc" aria-label="Increase quantity" type="button">+</button>
+          </div>
+          <button
+            class="vx2-atc"
+            id="vx2-atc"
+            type="button"
+            data-variant="{{ product.selected_or_first_available_variant.id }}"
+            {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}
+            aria-label="Add {{ product.title | escape }} to cart"
+          >
+            <span class="vx2-atc-spinner" aria-hidden="true"></span>
+            <svg class="vx2-atc-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+              <path d="M2 2h1.5l2.2 9.5A2 2 0 0 0 7.65 13h7.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M5.5 6.5h10l-1.2 5.5H6.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="8.5" cy="15.5" r="1.3" fill="currentColor"/>
+              <circle cx="14.5" cy="15.5" r="1.3" fill="currentColor"/>
+            </svg>
+            <span class="vx2-atc-label" id="vx2-atc-label">
+              {%- if product.selected_or_first_available_variant.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
+            </span>
+          </button>
+        </div>
+
+        {%- comment -%} Buy Now {%- endcomment -%}
+        {%- if section.settings.show_buy_now -%}
+          <button class="vx2-buy-now" id="vx2-buy-now" type="button">
+            Buy it now
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        {%- endif -%}
+
+        {%- comment -%} Stock indicator {%- endcomment -%}
+        <div class="vx2-stock" id="vx2-stock">
+          <span class="vx2-stock-dot" id="vx2-stock-dot"></span>
+          <span id="vx2-stock-label">
+            {%- if product.selected_or_first_available_variant.available -%}In stock — ready to ship{%- else -%}Out of stock{%- endif -%}
+          </span>
+        </div>
+
+        {%- comment -%} Trust strip {%- endcomment -%}
+        <div class="vx2-trust-strip">
+          <div class="vx2-trust-item">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2l1.9 4.3H17l-3.8 2.8 1.4 4.4L10 11.2l-4.6 2.3 1.4-4.4L3 6.3h5.1L10 2z" stroke="#F97316" stroke-width="1.4" fill="none"/></svg>
+            <span>Physio Approved</span>
+          </div>
+          <div class="vx2-trust-item">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 7h14v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" stroke="#F97316" stroke-width="1.4"/><path d="M3 7l2-4h10l2 4" stroke="#F97316" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Free Shipping</span>
+          </div>
+          <div class="vx2-trust-item">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 10l5 5L17 5" stroke="#F97316" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>30-Day Returns</span>
+          </div>
+          <div class="vx2-trust-item">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" stroke="#F97316" stroke-width="1.4"/><path d="M10 6v5l3 2" stroke="#F97316" stroke-width="1.4" stroke-linecap="round"/></svg>
+            <span>1–3 Day Dispatch</span>
+          </div>
+        </div>
+
+        {%- comment -%} Key benefits {%- endcomment -%}
+        <div class="vx2-benefits">
+          {%- assign b1 = section.settings.benefit_1 | default: 'Developed with registered physiotherapists' -%}
+{%- assign b2 = section.settings.benefit_2 | default: 'Comfortable for all-day, all-clothing wear' -%}
+{%- assign b3 = section.settings.benefit_3 | default: 'Results visible in as little as 2 weeks' -%}
+
+{%- assign bens = b1 | append: '|||' | append: b2 | append: '|||' | append: b3 -%}
+            <div class="vx2-benefit">
+              <span class="vx2-benefit-icon" aria-hidden="true">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l2.8 3 4.2-5.5" stroke="#F97316" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              {{ b }}
+            </div>
+         
+        </div>
+
+        {%- comment -%} Description accordion {%- endcomment -%}
+        <div class="vx2-accordion">
+          <div class="vx2-acc-item is-open">
+            <button class="vx2-acc-header" type="button" aria-expanded="true">
+              <span>Product Details</span>
+              <svg class="vx2-acc-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 6.75L9 11.25l4.5-4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="vx2-acc-body">
+              {%- if product.description != blank -%}
+                {{ product.description }}
+              {%- else -%}
+                <p>{{ section.settings.fallback_desc | default: "Your body does extraordinary things every day. This product was engineered to support every part of that journey — with clinically inspired design, breathable materials, and proven physiotherapy principles built in from the ground up." }}</p>
+              {%- endif -%}
+            </div>
+          </div>
+          
+        </div>
+
+      </div>
+      {%- comment -%} /INFO PANEL {%- endcomment -%}
+
+    </div>
+    {%- comment -%} /TOP GRID {%- endcomment -%}
+  </div>
+
+  {%- comment -%} ══ DESCRIPTION FEATURE STRIP ══ {%- endcomment -%}
+  <div class="vx2-feat-strip">
+    <div class="vx2-container">
+      <div class="vx2-feat-header">
+        <div class="vx2-feat-eyebrow">Why VexoraCare</div>
+        <h2 class="vx2-feat-title">{{ section.settings.feat_title | default: 'Built around <em>how you move.</em>' }}</h2>
+      </div>
+      <div class="vx2-feat-grid">
+        <div class="vx2-feat-card">
+          <div class="vx2-feat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3a5 5 0 1 1 0 10A5 5 0 0 1 12 3zM8 14h8l-2 7H10l-2-7z" stroke="#F97316" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>{{ section.settings.feat1_title | default: 'Posture Retraining' }}</h3>
+          <p>{{ section.settings.feat1_body | default: 'Gentle cues that retrain muscle memory. Wear it daily and your body learns to hold itself correctly — without effort.' }}</p>
+        </div>
+        <div class="vx2-feat-card">
+          <div class="vx2-feat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="#F97316" stroke-width="1.6"/><path d="M12 7v6l4 2" stroke="#F97316" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+          <h3>{{ section.settings.feat2_title | default: 'All-Day Comfort' }}</h3>
+          <p>{{ section.settings.feat2_body | default: 'Breathable, skin-safe materials that move with you — not against you. Invisible under any clothing, all day long.' }}</p>
+        </div>
+        <div class="vx2-feat-card">
+          <div class="vx2-feat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 13l6 6L20 7" stroke="#F97316" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>{{ section.settings.feat3_title | default: 'Clinically Proven' }}</h3>
+          <p>{{ section.settings.feat3_body | default: 'Designed with registered physiotherapists and tested by real people across a range of ages, body types, and lifestyles.' }}</p>
+        </div>
+        <div class="vx2-feat-card">
+          <div class="vx2-feat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2l2.4 6.2H21l-5.5 4 2.1 6.3L12 14.5l-5.6 4 2.1-6.3L3 8.2h6.6L12 2z" stroke="#F97316" stroke-width="1.5" fill="none"/></svg>
+          </div>
+          <h3>{{ section.settings.feat4_title | default: 'Drug-Free Relief' }}</h3>
+          <p>{{ section.settings.feat4_body | default: 'Zero medication. Zero compromise. Just smart, body-first engineering that addresses the root cause — not the symptom.' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+  {%- comment -%} ══ MOBILE STICKY BAR ══ {%- endcomment -%}
+  <div class="vx2-mobile-bar" id="vx2-mobile-bar" aria-hidden="true">
+    <div class="vx2-mobile-bar-price">
+      <span id="vx2-mb-price">{{ product.selected_or_first_available_variant.price | money }}</span>
+      {%- if product.compare_at_price_max > product.price -%}
+        <span class="vx2-mb-compare">{{ product.compare_at_price_max | money }}</span>
+      {%- endif -%}
+    </div>
+    <div class="vx2-mobile-bar-btns">
+      <button class="vx2-mb-atc" id="vx2-mb-atc" type="button">Add to Cart</button>
+      <button class="vx2-mb-buy" id="vx2-mb-buy" type="button">Buy Now</button>
+    </div>
+  </div>
+
+</div>
+{%- comment -%} /vx2-page {%- endcomment -%}
+
+{%- comment -%} ══ STYLES ══ {%- endcomment -%}
+<style>
+/* ── Tokens ────────────────────────────────────────────────────── */
+.vx2-page, .vx2-popup, .vx2-lightbox {
+  --bg:      #FFF3E4;
+  --white:   #FFFFFF;
+  --ink:     #111827;
+  --ink-60:  rgba(17,24,39,.60);
+  --ink-30:  rgba(17,24,39,.30);
+  --ink-08:  rgba(17,24,39,.08);
+  --ink-05:  rgba(17,24,39,.05);
+  --pri:     #F97316;
+  --sec:     #FB923C;
+  --star:    #FBBF24;
+  --success: #10B981;
+  --danger:  #EF4444;
+  --f-disp:  'Playfair Display', Georgia, serif;
+  --f-body:  'Jost', system-ui, sans-serif;
+  --ease:    cubic-bezier(.22,1,.36,1);
+  --r:       16px;
+}
+
+/* ── Base ──────────────────────────────────────────────────────── */
+.vx2-page { background: var(--bg); font-family: var(--f-body); overflow-x: hidden; }
+.vx2-container { max-width: 1220px; margin: 0 auto; padding: 0 40px; }
+
+/* ── Breadcrumb ────────────────────────────────────────────────── */
+.vx2-breadcrumb-bar { padding: 16px 0 0; }
+.vx2-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ink-60); flex-wrap: wrap; }
+.vx2-breadcrumb a { color: var(--ink-60); text-decoration: none; transition: color .2s; }
+.vx2-breadcrumb a:hover { color: var(--pri); }
+.vx2-breadcrumb span[aria-hidden] { color: var(--ink-30); }
+.vx2-bc-current { color: var(--ink); font-weight: 500; }
+
+/* ── Top Grid ──────────────────────────────────────────────────── */
+.vx2-top-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  padding: 36px 0 80px;
+  align-items: start;
+}
+
+/* ── Gallery col ───────────────────────────────────────────────── */
+.vx2-gallery-col {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 14px;
+  position: sticky;
+  top: 84px;
+}
+
+/* Thumb rail */
+.vx2-thumb-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 560px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.vx2-thumb-rail::-webkit-scrollbar { display: none; }
+.vx2-thumb {
+  width: 72px; height: 72px;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--white);
+  cursor: pointer;
+  padding: 0; flex-shrink: 0;
+  transition: border-color .2s, transform .2s, box-shadow .2s;
+}
+.vx2-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.vx2-thumb:hover { transform: translateY(-2px); border-color: var(--ink-30); }
+.vx2-thumb.is-active { border-color: var(--pri); box-shadow: 0 0 0 3px rgba(249,115,22,.15); }
+
+/* Main image */
+.vx2-main-img-col {}
+.vx2-main-img-wrap {
+  position: relative;
+  aspect-ratio: 1/1;
+  border-radius: 22px;
+  overflow: hidden;
+  background: var(--white);
+  border: 1px solid var(--ink-08);
+  cursor: zoom-in;
+}
+.vx2-hero-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .55s var(--ease), opacity .28s ease;
+}
+.vx2-hero-img.is-switching { opacity: 0; transform: scale(.97); }
+.vx2-main-img-wrap:hover .vx2-hero-img { transform: scale(1.04); }
+
+/* Expand button */
+.vx2-expand-btn {
+  position: absolute; bottom: 14px; right: 14px;
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.88);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--ink-08);
+  cursor: pointer; color: var(--ink-60);
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s, color .2s;
+  padding: 0; z-index: 3;
+}
+.vx2-expand-btn:hover { background: var(--white); color: var(--pri); }
+
+/* Image badge */
+.vx2-img-badge {
+  position: absolute; top: 16px; left: 16px; z-index: 3;
+  font-family: var(--f-body); font-size: 11px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  padding: 6px 14px; border-radius: 100px;
+  pointer-events: none;
+}
+.vx2-img-badge--sale { background: var(--pri); color: var(--white); box-shadow: 0 4px 14px rgba(249,115,22,.35); }
+.vx2-img-badge--new  { background: #1D4ED8; color: var(--white); }
+.vx2-img-badge--best { background: #D97706; color: var(--white); }
+
+/* Swipe ui */
+.vx2-swipe-dots { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 3; }
+.vx2-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.5); transition: background .2s, transform .2s; }
+.vx2-dot.is-active { background: var(--white); transform: scale(1.3); }
+.vx2-swipe-hint {
+  position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+  background: rgba(0,0,0,.55); backdrop-filter: blur(6px);
+  color: var(--white); font-size: 11px; font-weight: 500;
+  padding: 5px 12px; border-radius: 100px;
+  display: none; align-items: center; gap: 5px;
+  z-index: 3; white-space: nowrap;
+}
+
+/* Placeholder */
+.vx2-img-placeholder {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 12px;
+  background: rgba(249,115,22,.06);
+}
+.vx2-img-placeholder p { font-size: 12px; color: var(--ink-60); }
+
+/* ── Info col ──────────────────────────────────────────────────── */
+.vx2-info-col { display: flex; flex-direction: column; gap: 0; padding-top: 4px; }
+
+.vx2-meta-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+.vx2-vendor { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--pri); }
+.vx2-tag { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: .05em; }
+.vx2-tag--new  { background: #DBEAFE; color: #1D4ED8; }
+.vx2-tag--best { background: #FEF3C7; color: #D97706; }
+
+.vx2-rating-row { display: flex; align-items: center; gap: 7px; margin-bottom: 14px; flex-wrap: wrap; }
+.vx2-stars { display: flex; gap: 2px; }
+.vx2-rating-score { font-size: 13.5px; font-weight: 700; color: var(--ink); }
+.vx2-rating-dot { color: var(--ink-30); }
+.vx2-rating-link { font-size: 13px; color: var(--ink-60); text-decoration: underline; text-decoration-color: transparent; transition: color .2s, text-decoration-color .2s; }
+.vx2-rating-link:hover { color: var(--pri); text-decoration-color: var(--pri); }
+
+.vx2-title { font-family: var(--f-disp); font-size: clamp(2.5rem,2.8vw,3.8rem); font-weight: 700; color: var(--ink); line-height: 1.1; letter-spacing: -.02em; margin: 0 0 10px; }
+
+.vx2-short-desc { font-size: 15px; line-height: 1.72; color: var(--ink-60); font-weight: 300; margin: 0 0 20px; }
+
+/* Price */
+.vx2-price-block { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.vx2-price { font-family: 'Jost', sans-serif;; font-size: 2.1rem; font-weight: 700; color: var(--ink); letter-spacing: -.02em; line-height: 1; }
+.vx2-price-compare { font-size: 1.15rem; color: var(--ink-30); text-decoration: line-through; font-weight: 300; }
+.vx2-price-save { font-size: 11.5px; font-weight: 700; color: var(--pri); background: rgba(249,115,22,.1); padding: 4px 10px; border-radius: 100px; }
+
+/* Promotion Banner */
+.vx2-promo-banner {
+  background: linear-gradient(135deg, rgba(249,115,22,.14) 0%, rgba(251,146,60,.1) 100%);
+  border: 1.5px solid rgba(249,115,22,.25);
+  border-radius: 16px;
+  padding: 18px 20px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  animation: vx2-promo-pulse 2s ease-in-out infinite;
+}
+.vx2-promo-banner::before {
+  content: '';
+  position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent);
+  animation: vx2-promo-shine 3s ease-in-out infinite;
+}
+.vx2-promo-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+.vx2-promo-badge-wrap {
+  display: inline-flex;
+}
+.vx2-promo-badge {
+  display: inline-block;
+  background: rgba(249,115,22,.2);
+  color: var(--pri);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 100px;
+  border: 1px solid rgba(249,115,22,.3);
+  white-space: nowrap;
+}
+.vx2-promo-text {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -.01em;
+  text-align: center;
+  line-height: 1.2;
+}
+.vx2-promo-highlight {
+  color: var(--pri);
+  background: rgba(249,115,22,.1);
+  padding: 0 8px;
+  border-radius: 6px;
+  display: inline-block;
+  font-size: 1.9rem;
+}
+
+@keyframes vx2-promo-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(249,115,22,.2); }
+  50% { box-shadow: 0 0 0 8px rgba(249,115,22,.0); }
+}
+@keyframes vx2-promo-shine {
+  0%, 100% { left: -100%; }
+  50% { left: 100%; }
+}
+
+/* Checkout Notice */
+.vx2-checkout-notice {
+  background: linear-gradient(135deg, rgba(16,185,129,.08) 0%, rgba(16,185,129,.05) 100%);
+  border-left: 4px solid var(--success);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.vx2-notice-icon {
+  font-size: 18px;
+  color: var(--success);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+.vx2-notice-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.vx2-notice-title {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--ink);
+  display: block;
+}
+.vx2-notice-text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-60);
+  font-weight: 400;
+}
+.vx2-notice-highlight {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.vx2-divider { height: 1px; background: var(--ink-08); margin: 16px 0 20px; }
+
+/* Variants */
+.vx2-variants { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
+.vx2-opt-group {}
+.vx2-opt-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 9px; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+.vx2-opt-selected { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-60); font-size: 12px; }
+.vx2-opt-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.vx2-opt-pill {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 18px; border-radius: 100px;
+  border: 1.5px solid var(--ink-08); background: var(--white);
+  font-family: var(--f-body); font-size: 13.5px; font-weight: 500; color: var(--ink);
+  cursor: pointer; transition: border-color .2s, background .2s, color .2s, transform .15s;
+}
+.vx2-opt-pill:hover { border-color: var(--ink-30); transform: translateY(-1px); }
+.vx2-opt-pill.is-active { border-color: var(--pri); background: rgba(249,115,22,.07); color: var(--pri); }
+.vx2-swatch { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--white); box-shadow: 0 0 0 1px var(--ink-08); flex-shrink: 0; }
+
+/* Buy row */
+.vx2-buy-row { display: flex; gap: 12px; align-items: stretch; margin-bottom: 12px; }
+.vx2-qty-wrap {
+  display: flex; align-items: center;
+  border: 1.5px solid var(--ink-08); border-radius: 100px;
+  background: var(--white); overflow: hidden; flex-shrink: 0;
+}
+.vx2-qty-btn { width: 42px; height: 48px; border: none; background: transparent; color: var(--ink); font-size: 18px; font-weight: 300; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .15s, color .15s; padding: 0; font-family: var(--f-body); }
+.vx2-qty-btn:hover { background: var(--ink-05); color: var(--pri); }
+.vx2-qty-input { width: 36px; border: none; background: transparent; text-align: center; font-size: 15px; font-weight: 600; color: var(--ink); font-family: var(--f-body); -moz-appearance: textfield; }
+.vx2-qty-input::-webkit-inner-spin-button, .vx2-qty-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+.vx2-atc {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 9px;
+  background: var(--pri); color: var(--white);
+  font-family: var(--f-body); font-size: 15px; font-weight: 600; letter-spacing: .02em;
+  border: none; border-radius: 100px; cursor: pointer;
+  padding: 0 28px; height: 52px;
+  transition: background .2s, transform .2s, box-shadow .2s;
+  box-shadow: 0 8px 24px rgba(249,115,22,.28);
+  position: relative; overflow: hidden;
+}
+.vx2-atc:hover { background: #e8660d; transform: translateY(-2px); box-shadow: 0 14px 32px rgba(249,115,22,.36); }
+.vx2-atc:active { transform: scale(.98); }
+.vx2-atc:disabled { opacity: .55; cursor: not-allowed; transform: none; box-shadow: none; }
+.vx2-atc.is-loading { pointer-events: none; }
+.vx2-atc-spinner { display: none; width: 18px; height: 18px; border: 2px solid rgba(255,255,255,.35); border-top-color: #fff; border-radius: 50%; animation: vx2-spin .7s linear infinite; flex-shrink: 0; }
+.vx2-atc.is-loading .vx2-atc-spinner { display: block; }
+.vx2-atc.is-loading .vx2-atc-icon,
+.vx2-atc.is-loading .vx2-atc-label { opacity: .4; }
+@keyframes vx2-spin { to { transform: rotate(360deg); } }
+
+.vx2-buy-now {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--white); color: var(--ink);
+  font-family: var(--f-body); font-size: 14.5px; font-weight: 600;
+  border: 1.5px solid var(--ink-08); border-radius: 100px;
+  padding: 14px 28px; text-decoration: none; width: 100%;
+  transition: border-color .2s, background .2s; margin-bottom: 14px;
+}
+.vx2-buy-now:hover { border-color: var(--ink-30); background: var(--ink-05); }
+
+/* Stock */
+.vx2-stock { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--ink-60); font-weight: 400; margin-bottom: 20px; }
+.vx2-stock-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); flex-shrink: 0; }
+.vx2-stock--out .vx2-stock-dot { background: var(--danger); }
+
+/* Trust strip */
+.vx2-trust-strip {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+  border: 1px solid var(--ink-08); border-radius: var(--r);
+  overflow: hidden; margin-bottom: 20px; background: var(--white);
+}
+.vx2-trust-item {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; padding: 14px 8px; gap: 7px;
+  border-right: 1px solid var(--ink-08);
+  transition: background .2s;
+}
+.vx2-trust-item:last-child { border-right: none; }
+.vx2-trust-item:hover { background: rgba(249,115,22,.03); }
+.vx2-trust-item span { font-size: 10.5px; font-weight: 600; color: var(--ink); line-height: 1.3; }
+
+/* Benefits */
+.vx2-benefits { display: flex; flex-direction: column; gap: 9px; margin-bottom: 22px; }
+.vx2-benefit { display: flex; align-items: flex-start; gap: 10px; font-size: 13.5px; color: var(--ink-60); font-weight: 300; line-height: 1.5; }
+.vx2-benefit-icon { width: 19px; height: 19px; border-radius: 50%; background: rgba(249,115,22,.12); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+
+/* Accordion */
+.vx2-accordion { border-top: 1px solid var(--ink-08); margin-top: 4px; }
+.vx2-acc-item { border-bottom: 1px solid var(--ink-08); }
+.vx2-acc-header {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 0; background: transparent; border: none; cursor: pointer;
+  font-family: var(--f-body); font-size: 14.5px; font-weight: 600; color: var(--ink);
+  transition: color .2s;
+}
+.vx2-acc-header:hover { color: var(--pri); }
+.vx2-acc-chevron { flex-shrink: 0; transition: transform .3s var(--ease); color: var(--ink-60); }
+.vx2-acc-item.is-open .vx2-acc-chevron { transform: rotate(180deg); color: var(--pri); }
+.vx2-acc-body {
+  font-size: 14.5px; line-height: 1.76; color: var(--ink-60); font-weight: 300;
+  padding-bottom: 18px;
+}
+.vx2-acc-body p { margin: 0 0 1em; }
+.vx2-acc-body p:last-child { margin-bottom: 0; }
+.vx2-acc-body ul { padding-left: 0; list-style: none; }
+.vx2-acc-body ul li { padding-left: 18px; position: relative; margin-bottom: .5em; }
+.vx2-acc-body ul li::before { content: '→'; position: absolute; left: 0; color: var(--pri); font-size: 12px; }
+.vx2-acc-body img { max-width: 100%; height: auto; }
+
+/* ── Feature Strip ─────────────────────────────────────────────── */
+.vx2-feat-strip {
+  background: var(--ink); padding: 80px 0;
+  position: relative; overflow: hidden;
+}
+.vx2-feat-strip::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(249,115,22,.08) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+.vx2-feat-header { text-align: center; margin-bottom: 52px; }
+.vx2-feat-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--sec); margin-bottom: 14px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.vx2-feat-eyebrow::before, .vx2-feat-eyebrow::after { content: ''; display: block; width: 28px; height: 1.5px; background: var(--sec); border-radius: 2px; }
+.vx2-feat-title { font-family: var(--f-disp); font-size: clamp(2rem,3vw,3.2rem); font-weight: 700; color: var(--white); line-height: 1.1; letter-spacing: -.02em; margin: 0; }
+.vx2-feat-title em { font-style: italic; color: var(--sec); }
+
+.vx2-feat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; }
+.vx2-feat-card {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 20px; padding: 32px 26px;
+  position: relative; overflow: hidden;
+  transition: transform .3s var(--ease), border-color .3s, background .3s;
+}
+.vx2-feat-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--pri), transparent);
+  opacity: 0; transition: opacity .3s;
+}
+.vx2-feat-card:hover { transform: translateY(-5px); border-color: rgba(249,115,22,.22); background: rgba(255,255,255,.06); }
+.vx2-feat-card:hover::before { opacity: 1; }
+.vx2-feat-icon { width: 48px; height: 48px; border-radius: 13px; background: rgba(249,115,22,.14); display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+.vx2-feat-card h3 { font-family: var(--f-disp); font-size: 1.2rem; font-weight: 700; color: var(--white); margin: 0 0 10px; }
+.vx2-feat-card p { font-size: 13.5px; line-height: 1.68; color: rgba(255,255,255,.5); margin: 0; font-weight: 300; }
+
+/* ── Reviews ───────────────────────────────────────────────────── */
+.vx2-reviews-section { background: var(--bg); padding: 80px 0 100px; }
+.vx2-reviews-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 36px; flex-wrap: wrap; }
+.vx2-reviews-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--pri); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.vx2-reviews-eyebrow::before { content: ''; display: block; width: 22px; height: 1.5px; background: var(--pri); }
+.vx2-reviews-title { font-family: var(--f-disp); font-size: clamp(1.8rem,3vw,2.8rem); font-weight: 700; color: var(--ink); letter-spacing: -.02em; margin: 0; }
+.vx2-reviews-score-block { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+.vx2-score-num { font-family: var(--f-disp); font-size: 3.8rem; font-weight: 700; color: var(--ink); letter-spacing: -.03em; line-height: 1; }
+.vx2-score-stars { display: flex; gap: 3px; margin-bottom: 4px; }
+.vx2-score-label { font-size: 12px; color: var(--ink-60); font-weight: 300; }
+
+/* Rating bars */
+.vx2-rating-bars { display: flex; flex-direction: column; gap: 8px; margin-bottom: 44px; max-width: 360px; }
+.vx2-rating-bar-row { display: flex; align-items: center; gap: 10px; }
+.vx2-rb-label { font-size: 12.5px; font-weight: 500; color: var(--ink-60); width: 24px; flex-shrink: 0; }
+.vx2-rb-track { flex: 1; height: 7px; background: var(--ink-08); border-radius: 100px; overflow: hidden; }
+.vx2-rb-fill { height: 100%; background: linear-gradient(90deg, var(--pri), var(--sec)); border-radius: 100px; transition: width .8s var(--ease); }
+.vx2-rb-pct { font-size: 11.5px; color: var(--ink-60); font-weight: 300; width: 32px; text-align: right; flex-shrink: 0; }
+
+/* Review grid */
+.vx2-reviews-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 20px; margin-bottom: 36px; }
+.vx2-review-card {
+  background: var(--white);
+  border: 1px solid var(--ink-08); border-radius: 20px;
+  padding: 28px; display: flex; flex-direction: column; gap: 14px;
+  transition: transform .28s var(--ease), box-shadow .28s;
+}
+.vx2-review-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(17,24,39,.07); }
+.vx2-review-card--featured {
+  grid-column: 1/-1;
+  background: linear-gradient(135deg, rgba(249,115,22,.04), var(--white));
+  border-color: rgba(249,115,22,.18);
+}
+.vx2-rc-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.vx2-rc-author { display: flex; align-items: center; gap: 12px; }
+.vx2-rc-avatar { width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-family: var(--f-disp); font-size: 1.1rem; font-weight: 700; color: var(--white); }
+.vx2-rc-name { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+.vx2-rc-verified { font-size: 11px; color: var(--pri); font-weight: 500; }
+.vx2-rc-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+.vx2-rc-stars { display: flex; gap: 2px; }
+.vx2-rc-date { font-size: 11px; color: var(--ink-60); font-weight: 300; }
+.vx2-rc-headline { font-family: var(--f-disp); font-size: 1.05rem; font-weight: 700; color: var(--ink); margin: 0; line-height: 1.3; }
+.vx2-rc-body { font-size: 14px; line-height: 1.72; color: var(--ink-60); font-weight: 300; margin: 0; }
+.vx2-rc-tag { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: var(--pri); background: rgba(249,115,22,.08); padding: 4px 12px; border-radius: 100px; width: fit-content; letter-spacing: .03em; }
+
+/* Write review btn */
+.vx2-write-review-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: fit-content; margin: 0 auto;
+  font-family: var(--f-body); font-size: 14px; font-weight: 500; color: var(--ink);
+  text-decoration: none; padding: 13px 30px; border-radius: 100px;
+  border: 1.5px solid var(--ink-08);
+  transition: border-color .2s, color .2s, background .2s;
+}
+.vx2-write-review-btn:hover { border-color: var(--pri); color: var(--pri); background: rgba(249,115,22,.04); }
+
+/* ── Cart Added Popup ──────────────────────────────────────────── */
+.vx2-popup {
+  position: fixed; top: 24px; right: 24px; z-index: 100000;
+  transform: translateY(-20px) scale(.96);
+  opacity: 0; pointer-events: none;
+  transition: transform .38s var(--ease), opacity .3s ease;
+  max-width: 360px; width: calc(100vw - 48px);
+}
+.vx2-popup.is-visible { transform: none; opacity: 1; pointer-events: all; }
+.vx2-popup-inner {
+  background: var(--white);
+  border: 1px solid var(--ink-08);
+  border-radius: 18px;
+  padding: 16px 20px;
+  box-shadow: 0 20px 60px rgba(17,24,39,.14);
+  display: flex; align-items: center; gap: 14px;
+  position: relative;
+}
+.vx2-popup-check { flex-shrink: 0; }
+.vx2-popup-content { flex: 1; min-width: 0; }
+.vx2-popup-title { font-size: 14.5px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+.vx2-popup-sub { font-size: 12.5px; color: var(--ink-60); font-weight: 300; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vx2-popup-actions { display: flex; flex-direction: column; gap: 5px; flex-shrink: 0; }
+.vx2-popup-view { font-size: 12.5px; font-weight: 500; color: var(--ink-60); text-decoration: none; white-space: nowrap; text-align: right; transition: color .2s; }
+.vx2-popup-view:hover { color: var(--ink); }
+.vx2-popup-checkout { font-size: 12.5px; font-weight: 700; color: var(--pri); text-decoration: none; white-space: nowrap; text-align: right; transition: color .2s; }
+.vx2-popup-checkout:hover { color: #e8660d; }
+.vx2-popup-dismiss { position: absolute; top: 10px; right: 10px; width: 22px; height: 22px; border: none; background: transparent; cursor: pointer; color: var(--ink-30); display: flex; align-items: center; justify-content: center; border-radius: 6px; transition: color .2s, background .2s; padding: 0; }
+.vx2-popup-dismiss:hover { color: var(--ink); background: var(--ink-05); }
+
+/* ── Lightbox ──────────────────────────────────────────────────── */
+.vx2-lightbox {
+  position: fixed; inset: 0; z-index: 99999;
+  opacity: 0; visibility: hidden;
+  transition: opacity .3s ease, visibility .3s;
+}
+.vx2-lightbox.is-open { opacity: 1; visibility: visible; }
+.vx2-lb-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.92); cursor: zoom-out; }
+.vx2-lb-body { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 60px 80px; }
+.vx2-lb-img-wrap { max-width: 900px; max-height: 90vh; display: flex; align-items: center; justify-content: center; }
+#vx2-lb-img { max-width: 100%; max-height: 90vh; object-fit: contain; display: block; border-radius: 4px; }
+.vx2-lb-close {
+  position: absolute; top: 20px; right: 20px;
+  width: 40px; height: 40px; border-radius: 12px;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(0, 0, 0, .92);
+  color: var(--white); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s; padding: 0;
+}
+.vx2-lb-close:hover { background: rgba(255,255,255,.2); }
+.vx2-lb-nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(0, 0, 0, 0.52);
+  color: var(--white); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s; padding: 0;
+}
+.vx2-lb-nav:hover { background: rgba(255,255,255,.2); }
+.vx2-lb-prev { left: 20px; }
+.vx2-lb-next { right: 20px; }
+.vx2-lb-counter { position: absolute; top: 22px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,.7); font-size: 13px; font-family: var(--f-body); font-weight: 400; }
+
+/* ── Mobile bar ────────────────────────────────────────────────── */
+.vx2-mobile-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--white); border-top: 1px solid var(--ink-08);
+  padding: 12px 16px; z-index: 1000;
+  display: none; align-items: center; justify-content: space-between; gap: 12px;
+  box-shadow: 0 -6px 24px rgba(17,24,39,.09);
+  transition: bottom .3s ease, transform .3s ease;
+}
+.vx2-mobile-bar-price {
+  display: flex;
+  flex-direction: column;
+  gap: 4px; /* slightly more breathing space */
+}
+
+.vx2-mobile-bar-price span:first-child {
+  font-family: 'Jost', sans-serif; /* match desktop */
+  font-size: 1.45rem; /* slightly bigger for visibility */
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.02em; /* premium look */
+  line-height: 1.1;
+}
+.vx2-mb-compare { font-size: 12px; color: var(--ink-30); text-decoration: line-through; }
+.vx2-mobile-bar-btns { display: flex; gap: 8px; flex: 1; max-width: 280px; }
+.vx2-mb-atc { flex: 2; padding: 13px 16px; background: var(--pri); color: var(--white); border: none; border-radius: 12px; font-family: var(--f-body); font-size: 14px; font-weight: 600; cursor: pointer; transition: background .2s; }
+.vx2-mb-atc:hover { background: #e8660d; }
+.vx2-mb-buy { flex: 1; padding: 13px 16px; background: var(--white); color: var(--ink); border: 1.5px solid var(--ink-08); border-radius: 12px; font-family: var(--f-body); font-size: 14px; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center; transition: border-color .2s; }
+.vx2-mb-buy:hover { border-color: var(--pri); }
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .vx2-feat-grid { grid-template-columns: repeat(2,1fr); }
+}
+@media (max-width: 860px) {
+  .vx2-container { padding: 0 20px; }
+  .vx2-top-grid { grid-template-columns: 1fr; gap: 0; padding-bottom: 60px; }
+  .vx2-gallery-col {
+    grid-template-columns: 1fr;
+    position: static;
+    margin-bottom: 24px;
+  }
+  .vx2-thumb-rail {
+    flex-direction: row;
+    max-height: none;
+    overflow-x: auto;
+    order: 2;
+    padding: 10px 0;
+  }
+  .vx2-thumb { width: 64px; height: 64px; }
+  .vx2-main-img-col { order: 1; }
+  .vx2-swipe-hint { display: flex; }
+  .vx2-mobile-bar { display: flex; }
+  .vx2-page { padding-bottom: 80px; }
+  .vx2-trust-strip { grid-template-columns: repeat(2,1fr); }
+  .vx2-trust-item:nth-child(2) { border-right: none; }
+  .vx2-trust-item:nth-child(3) { border-top: 1px solid var(--ink-08); border-right: 1px solid var(--ink-08); }
+  .vx2-trust-item:nth-child(4) { border-top: 1px solid var(--ink-08); border-right: none; }
+  .vx2-reviews-grid { grid-template-columns: 1fr; }
+  .vx2-review-card--featured { grid-column: 1; }
+  .vx2-feat-grid { grid-template-columns: 1fr; }
+  .vx2-reviews-header { flex-direction: column; align-items: flex-start; }
+  .vx2-reviews-score-block { align-self: flex-start; }
+  .vx2-lb-body { padding: 60px 16px; }
+  .vx2-lb-nav { display: none; }
+}
+@media (max-width: 480px) {
+  .vx2-popup { top: 12px; right: 12px; width: calc(100vw - 24px); }
+  .vx2-buy-row { flex-direction: column; }
+  .vx2-qty-wrap { align-self: flex-start; }
+}
+</style>
+
+{%- comment -%} ══ JAVASCRIPT ══ {%- endcomment -%}
+<script>
+(function () {
+  'use strict';
+
+  /* ── Product data ── */
+  var productData   = {{ product | json }};
+  var productImages = [{% for img in product.images %}{ id: {{ img.id }}, src: "{{ img | img_url: '1200x' }}", alt: "{{ img.alt | default: product.title | escape }}" }{% unless forloop.last %},{% endunless %}{% endfor %}];
+  var currentVariantId = productData.variants[0] ? productData.variants[0].id : null;
+  var currentImgIdx    = 0;
+  var qty = 1;
+
+  /* ── Helpers ── */
+  function $(id) { return document.getElementById(id); }
+  function money(cents) {
+    var sym = (window.Shopify && window.Shopify.currency && window.Shopify.currency.symbol) ? window.Shopify.currency.symbol : '£';
+    return sym + (cents / 100).toFixed(2);
+  }
+
+  /* ══════════════════════════════════════
+     GALLERY
+  ══════════════════════════════════════ */
+  var heroImg  = $('vx2-hero-img');
+  var thumbs   = document.querySelectorAll('.vx2-thumb');
+  var dots     = document.querySelectorAll('.vx2-dot');
+
+  function goToImage(idx) {
+    if (!productImages.length) return;
+    idx = (idx + productImages.length) % productImages.length;
+    currentImgIdx = idx;
+    if (heroImg) {
+      heroImg.classList.add('is-switching');
+      setTimeout(function () {
+        heroImg.src = productImages[idx].src;
+        heroImg.alt = productImages[idx].alt;
+        heroImg.classList.remove('is-switching');
+      }, 200);
+    }
+    thumbs.forEach(function (t, i) { t.classList.toggle('is-active', i === idx); });
+    dots.forEach(function (d, i) { d.classList.toggle('is-active', i === idx); });
+  }
+
+  thumbs.forEach(function (thumb) {
+    thumb.addEventListener('click', function () {
+      goToImage(parseInt(thumb.getAttribute('data-index'), 10));
+    });
+  });
+
+  /* Touch swipe on main image */
+  var mainWrap = document.querySelector('.vx2-main-img-wrap');
+  if (mainWrap) {
+    var touchX = 0;
+    mainWrap.addEventListener('touchstart', function (e) { touchX = e.changedTouches[0].screenX; }, { passive: true });
+    mainWrap.addEventListener('touchend', function (e) {
+      var dx = e.changedTouches[0].screenX - touchX;
+      if (Math.abs(dx) > 48) goToImage(currentImgIdx + (dx < 0 ? 1 : -1));
+    }, { passive: true });
+  }
+
+  /* ══════════════════════════════════════
+     LIGHTBOX
+  ══════════════════════════════════════ */
+  var lightbox = document.querySelector('.vx2-lightbox');
+  var lbImg    = $('vx2-lb-img');
+  var lbCnt    = $('vx2-lb-counter');
+
+  function openLightbox(idx) {
+    if (!lightbox || !productImages.length) return;
+    idx = idx === undefined ? currentImgIdx : idx;
+    lbImg.src = productImages[idx].src;
+    lbImg.alt = productImages[idx].alt;
+    if (lbCnt) lbCnt.textContent = (idx + 1) + ' / ' + productImages.length;
+    lightbox.classList.add('is-open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    if (!lightbox) return;
+    lightbox.classList.remove('is-open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+  function lbNavigate(dir) {
+    var newIdx = (currentImgIdx + dir + productImages.length) % productImages.length;
+    currentImgIdx = newIdx;
+    lbImg.src = productImages[newIdx].src;
+    lbImg.alt = productImages[newIdx].alt;
+    if (lbCnt) lbCnt.textContent = (newIdx + 1) + ' / ' + productImages.length;
+  }
+
+  var expandBtn = $('vx2-expand-btn');
+  if (expandBtn) expandBtn.addEventListener('click', function () { openLightbox(); });
+  if (heroImg)   heroImg.addEventListener('click',   function () { openLightbox(); });
+  var lbClose    = $('vx2-lb-close');
+  var lbBackdrop = $('vx2-lb-backdrop');
+  var lbPrev     = $('vx2-lb-prev');
+  var lbNext     = $('vx2-lb-next');
+  if (lbClose)    lbClose.addEventListener('click', closeLightbox);
+  if (lbBackdrop) lbBackdrop.addEventListener('click', closeLightbox);
+  if (lbPrev)     lbPrev.addEventListener('click', function () { lbNavigate(-1); });
+  if (lbNext)     lbNext.addEventListener('click', function () { lbNavigate(1); });
+  document.addEventListener('keydown', function (e) {
+    if (!lightbox || !lightbox.classList.contains('is-open')) return;
+    if (e.key === 'Escape')      closeLightbox();
+    if (e.key === 'ArrowLeft')   lbNavigate(-1);
+    if (e.key === 'ArrowRight')  lbNavigate(1);
+  });
+
+  /* ══════════════════════════════════════
+     STICKY BAR - CART INTERACTION
+  ══════════════════════════════════════ */
+  var mobileBar = $('vx2-mobile-bar');
+  
+  document.addEventListener('cart:opened', function() {
+    if (mobileBar) {
+      mobileBar.style.transform = 'translateY(100%)';
+    }
+  });
+  
+  document.addEventListener('cart:closed', function() {
+    if (mobileBar) {
+      mobileBar.style.transform = 'translateY(0)';
+    }
+  });
+
+  /* ══════════════════════════════════════
+     QUANTITY
+  ══════════════════════════════════════ */
+  var qtyInput = $('vx2-qty');
+  var qtyDec   = $('vx2-qty-dec');
+  var qtyInc   = $('vx2-qty-inc');
+  function setQty(n) { qty = Math.max(1, Math.min(99, n)); if (qtyInput) qtyInput.value = qty; }
+  if (qtyDec) qtyDec.addEventListener('click', function () { setQty(qty - 1); });
+  if (qtyInc) qtyInc.addEventListener('click', function () { setQty(qty + 1); });
+  setQty(1);
+
+  /* ══════════════════════════════════════
+     VARIANTS
+  ══════════════════════════════════════ */
+  var pills = document.querySelectorAll('.vx2-opt-pill');
+  pills.forEach(function (pill) {
+    pill.addEventListener('click', function () {
+      var optIdx = parseInt(pill.getAttribute('data-option-index'), 10);
+      document.querySelectorAll('.vx2-opt-pill[data-option-index="' + optIdx + '"]').forEach(function (p) { p.classList.remove('is-active'); });
+      pill.classList.add('is-active');
+      var labelEl = $(pill.getAttribute('data-option-label-id'));
+      if (labelEl) labelEl.textContent = pill.getAttribute('data-value');
+      matchVariant();
+    });
+  });
+
+  function getSelectedOpts() {
+    var opts = {};
+    document.querySelectorAll('.vx2-opt-pills').forEach(function (group) {
+      var idx = parseInt(group.getAttribute('data-option-index'), 10);
+      var active = group.querySelector('.vx2-opt-pill.is-active');
+      if (active) opts[idx] = active.getAttribute('data-value');
+    });
+    return opts;
+  }
+
+  function matchVariant() {
+    var opts = getSelectedOpts();
+    var matched = null;
+    productData.variants.forEach(function (v) {
+      if (matched) return;
+      var ok = Object.keys(opts).every(function (i) { return v['option' + (parseInt(i, 10) + 1)] === opts[i]; });
+      if (ok) matched = v;
+    });
+    if (!matched) return;
+    currentVariantId = matched.id;
+    updatePrices(matched);
+    updateStock(matched);
+    updateAtcState(matched);
+    updateBuyNow(matched);
+    if (matched.featured_image) {
+      var imgIdx = productImages.findIndex(function (img) { return img.id === matched.featured_image.id; });
+      if (imgIdx !== -1) goToImage(imgIdx);
+    }
+  }
+
+  function updatePrices(v) {
+    var priceEl   = $('vx2-price');
+    var compareEl = $('vx2-price-compare');
+    var saveEl    = $('vx2-price-save');
+    var mbPrice   = $('vx2-mb-price');
+    if (priceEl)  priceEl.textContent  = money(v.price);
+    if (mbPrice)  mbPrice.textContent  = money(v.price);
+    if (v.compare_at_price && v.compare_at_price > v.price) {
+      if (compareEl) { compareEl.textContent = money(v.compare_at_price); compareEl.style.display = ''; }
+      if (saveEl)    { var pct = Math.round((v.compare_at_price - v.price) * 100 / v.compare_at_price); saveEl.textContent = 'Save ' + pct + '%'; saveEl.style.display = ''; }
+    } else {
+      if (compareEl) compareEl.style.display = 'none';
+      if (saveEl)    saveEl.style.display    = 'none';
+    }
+  }
+
+  function updateStock(v) {
+    var stockEl  = document.querySelector('.vx2-stock');
+    var labelEl  = $('vx2-stock-label');
+    var dotEl    = document.querySelector('.vx2-stock-dot');
+    if (!stockEl) return;
+    if (v.available) {
+      stockEl.classList.remove('vx2-stock--out');
+      if (dotEl)   dotEl.style.background = 'var(--success)';
+      if (labelEl) labelEl.textContent    = 'In stock — ready to ship';
+    } else {
+      stockEl.classList.add('vx2-stock--out');
+      if (dotEl)   dotEl.style.background = 'var(--danger)';
+      if (labelEl) labelEl.textContent    = 'Out of stock';
+    }
+  }
+
+  function updateAtcState(v) {
+    var btn   = $('vx2-atc');
+    var label = $('vx2-atc-label');
+    var mb    = $('vx2-mb-atc');
+    if (btn) { btn.disabled = !v.available; btn.setAttribute('data-variant', v.id); }
+    if (label) label.textContent = v.available ? 'Add to Cart' : 'Sold Out';
+    if (mb)    mb.disabled       = !v.available;
+  }
+
+  function updateBuyNow(v) {
+    var bn   = $('vx2-buy-now');
+    var mbBn = $('vx2-mb-buy');
+    var url  = '/checkout?variant=' + v.id + '&quantity=' + qty;
+    if (bn)   bn.href   = url;
+    if (mbBn) mbBn.href = url;
+  }
+
+  /* ══════════════════════════════════════
+     CART ADDED POPUP
+  ══════════════════════════════════════ */
+  var popup       = $('vx2-popup');
+  var popupSub    = $('vx2-popup-sub');
+  var popupDismiss = $('vx2-popup-dismiss');
+  var popupTimer  = null;
+
+  function showPopup(itemName, itemQty) {
+    if (!popup) return;
+    if (popupSub) popupSub.textContent = itemQty + ' × ' + itemName;
+    popup.classList.add('is-visible');
+    popup.setAttribute('aria-hidden', 'false');
+    clearTimeout(popupTimer);
+    popupTimer = setTimeout(hidePopup, 4500);
+  }
+  function hidePopup() {
+    if (!popup) return;
+    popup.classList.remove('is-visible');
+    popup.setAttribute('aria-hidden', 'true');
+  }
+  if (popupDismiss) popupDismiss.addEventListener('click', hidePopup);
+
+  /* ══════════════════════════════════════
+     ADD TO CART
+  ══════════════════════════════════════ */
+  function doAddToCart(variantId, quantity) {
+    return fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: variantId, quantity: quantity })
+    }).then(function (r) {
+      if (!r.ok) throw new Error('cart add failed');
+      return r.json();
+    });
+  }
+
+  function handleAtcClick() {
+    if (!currentVariantId) return;
+    var v = productData.variants.find(function (x) { return x.id === currentVariantId; });
+    if (!v || !v.available) return;
+    var atcBtn = $('vx2-atc');
+    if (atcBtn) atcBtn.classList.add('is-loading');
+    doAddToCart(currentVariantId, qty)
+      .then(function () {
+        if (atcBtn) atcBtn.classList.remove('is-loading');
+        showPopup(productData.title, qty);
+        document.dispatchEvent(new CustomEvent('theme:cart:added'));
+        document.dispatchEvent(new CustomEvent('cart:updated'));
+        /* brief label success */
+        var lbl = $('vx2-atc-label');
+        var icon = atcBtn ? atcBtn.querySelector('.vx2-atc-icon') : null;
+        if (lbl) lbl.textContent = '✓ Added!';
+        if (icon) icon.style.display = 'none';
+        setTimeout(function () {
+          if (lbl) lbl.textContent = 'Add to Cart';
+          if (icon) icon.style.display = '';
+        }, 2000);
+      })
+      .catch(function () {
+        if (atcBtn) atcBtn.classList.remove('is-loading');
+      });
+  }
+
+  var atcBtn = $('vx2-atc');
+  var mbAtc  = $('vx2-mb-atc');
+  if (atcBtn) atcBtn.addEventListener('click', handleAtcClick);
+  if (mbAtc)  mbAtc.addEventListener('click', handleAtcClick);
+
+  /* ══════════════════════════════════════
+     BUY NOW (ADD TO CART THEN CHECKOUT)
+  ══════════════════════════════════════ */
+  function handleBuyNowClick() {
+    if (!currentVariantId) return;
+    var v = productData.variants.find(function (x) { return x.id === currentVariantId; });
+    if (!v || !v.available) return;
+    var buyBtn = $('vx2-buy-now');
+    var mbBuyBtn = $('vx2-mb-buy');
+    if (buyBtn) buyBtn.disabled = true;
+    if (mbBuyBtn) mbBuyBtn.disabled = true;
+    doAddToCart(currentVariantId, qty)
+      .then(function () {
+        /* redirect to checkout after item is added */
+        window.location.href = '/checkout';
+      })
+      .catch(function (err) {
+        if (buyBtn) buyBtn.disabled = false;
+        if (mbBuyBtn) mbBuyBtn.disabled = false;
+        console.error('Buy Now failed:', err);
+      });
+  }
+
+  var buyBtn = $('vx2-buy-now');
+  var mbBuyBtn = $('vx2-mb-buy');
+  if (buyBtn) buyBtn.addEventListener('click', handleBuyNowClick);
+  if (mbBuyBtn) mbBuyBtn.addEventListener('click', handleBuyNowClick);
+
+  /* ══════════════════════════════════════
+     ACCORDION
+  ══════════════════════════════════════ */
+  document.querySelectorAll('.vx2-acc-header').forEach(function (header) {
+    header.addEventListener('click', function () {
+      var item   = header.closest('.vx2-acc-item');
+      var body   = item.querySelector('.vx2-acc-body');
+      var isOpen = item.classList.contains('is-open');
+      /* close all */
+      document.querySelectorAll('.vx2-acc-item').forEach(function (i) {
+        i.classList.remove('is-open');
+        i.querySelector('.vx2-acc-header').setAttribute('aria-expanded', 'false');
+        var b = i.querySelector('.vx2-acc-body');
+        if (b) b.hidden = true;
+      });
+      /* open clicked if it was closed */
+      if (!isOpen) {
+        item.classList.add('is-open');
+        header.setAttribute('aria-expanded', 'true');
+        if (body) body.hidden = false;
+      }
+    });
+  });
+  /* Open first on load */
+  var firstAcc = document.querySelector('.vx2-acc-item.is-open');
+  if (firstAcc) {
+    var firstBody = firstAcc.querySelector('.vx2-acc-body');
+    if (firstBody) firstBody.hidden = false;
+  }
+
+  /* ══════════════════════════════════════
+     MOBILE BAR SHOW/HIDE ON SCROLL
+  ══════════════════════════════════════ */
+  var mobileBar = $('vx2-mobile-bar');
+  if (mobileBar && window.innerWidth < 860) {
+    mobileBar.style.display = 'flex';
+  }
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Product Page Design 2",
+  "settings": [
+    { "type": "header",   "content": "Panel settings" },
+    { "type": "checkbox", "id": "show_buy_now",       "label": "Show Buy Now button",      "default": true },
+    { "type": "text",     "id": "review_count",        "label": "Total review count",       "default": "128" },
+    { "type": "text",     "id": "fallback_short",      "label": "Fallback short description","default": "Precision-engineered for the way your body moves. Clinically inspired, daily tested, built to outlast." },
+    { "type": "textarea", "id": "fallback_desc",       "label": "Fallback full description", "default": "Your body does extraordinary things every day. This product was engineered to support every part of that journey." },
+    { "type": "header",   "content": "Accordion text" },
+    { "type": "textarea", "id": "shipping_text", "label": "Shipping & Returns text", "default": "Free standard shipping on all UK orders. Orders dispatched within 1–3 business days. 30-day hassle-free returns." },
+    { "type": "textarea", "id": "care_text",     "label": "Care instructions text",  "default": "Hand wash in cool water with mild detergent. Air dry flat away from direct sunlight." },
+    { "type": "header",   "content": "Benefits" },
+    { "type": "text",     "id": "benefit_1",    "label": "Benefit 1", "default": "Developed with registered physiotherapists" },
+    { "type": "text",     "id": "benefit_2",    "label": "Benefit 2", "default": "Comfortable for all-day, all-clothing wear" },
+    { "type": "text",     "id": "benefit_3",    "label": "Benefit 3", "default": "Results visible in as little as 2 weeks" },
+    { "type": "header",   "content": "Feature strip" },
+    { "type": "text",     "id": "feat_title",   "label": "Section title (use em tags for italic)", "default": "Built around <em>how you move.</em>" },
+    { "type": "text",     "id": "feat1_title",  "label": "Feature 1 title", "default": "Posture Retraining" },
+    { "type": "textarea", "id": "feat1_body",   "label": "Feature 1 body",  "default": "Gentle cues that retrain muscle memory. Wear it daily and your body learns to hold itself correctly." },
+    { "type": "text",     "id": "feat2_title",  "label": "Feature 2 title", "default": "All-Day Comfort" },
+    { "type": "textarea", "id": "feat2_body",   "label": "Feature 2 body",  "default": "Breathable, skin-safe materials that move with you, invisible under any clothing, all day long." },
+    { "type": "text",     "id": "feat3_title",  "label": "Feature 3 title", "default": "Clinically Proven" },
+    { "type": "textarea", "id": "feat3_body",   "label": "Feature 3 body",  "default": "Designed with registered physiotherapists and tested by real people across ages and body types." },
+    { "type": "text",     "id": "feat4_title",  "label": "Feature 4 title", "default": "Drug-Free Relief" },
+    { "type": "textarea", "id": "feat4_body",   "label": "Feature 4 body",  "default": "Zero medication. Smart, body-first engineering that addresses the root cause, not the symptom." },
+    { "type": "header",   "content": "Review 1 (featured)" },
+    { "type": "text",     "id": "r1_name",  "label": "Name",    "default": "Sarah M." },
+    { "type": "text",     "id": "r1_date",  "label": "Date",    "default": "2 weeks ago" },
+    { "type": "text",     "id": "r1_title", "label": "Headline","default": "\"The first thing that's actually made a difference\"" },
+    { "type": "textarea", "id": "r1_body",  "label": "Body",    "default": "Two years of desk-related upper back pain and I was convinced nothing would shift it. Within 10 days my physio asked what I'd changed. Cannot recommend this enough." },
+    { "type": "text",     "id": "r1_tag",   "label": "Tag",     "default": "Posture Corrector" },
+    { "type": "header",   "content": "Review 2" },
+    { "type": "text",     "id": "r2_name",  "label": "Name",    "default": "James T." },
+    { "type": "text",     "id": "r2_date",  "label": "Date",    "default": "1 month ago" },
+    { "type": "text",     "id": "r2_title", "label": "Headline","default": "\"Comfortable enough to forget you're wearing it\"" },
+    { "type": "textarea", "id": "r2_body",  "label": "Body",    "default": "Wore it through a 9-hour work day and only remembered it was on when I caught my posture in a window reflection." },
+    { "type": "text",     "id": "r2_tag",   "label": "Tag",     "default": "Daily Wear" },
+    { "type": "header",   "content": "Review 3" },
+    { "type": "text",     "id": "r3_name",  "label": "Name",    "default": "Priya K." },
+    { "type": "text",     "id": "r3_date",  "label": "Date",    "default": "3 weeks ago" },
+    { "type": "text",     "id": "r3_title", "label": "Headline","default": "\"My physio told me to keep using it between sessions\"" },
+    { "type": "textarea", "id": "r3_body",  "label": "Body",    "default": "Bought this after finishing a physio course. She was happy for me to continue with it independently. Build quality is exceptional." },
+    { "type": "text",     "id": "r3_tag",   "label": "Tag",     "default": "Physio Recommended" },
+    { "type": "header",   "content": "Review 4" },
+    { "type": "text",     "id": "r4_name",  "label": "Name",    "default": "Marcus R." },
+    { "type": "text",     "id": "r4_date",  "label": "Date",    "default": "5 days ago" },
+    { "type": "text",     "id": "r4_title", "label": "Headline","default": "\"Worth every penny — delivered faster than expected\"" },
+    { "type": "textarea", "id": "r4_body",  "label": "Body",    "default": "Ordered Tuesday, arrived Thursday. The product itself has already started making a difference to my lower back after long gym sessions." },
+    { "type": "text",     "id": "r4_tag",   "label": "Tag",     "default": "Back Pain Relief" }
+  ],
+  "presets": [{ "name": "Product Page Design 2", "category": "VexoraCare" }]
+}
+{% endschema %}
