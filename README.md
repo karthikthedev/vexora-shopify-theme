@@ -4,17 +4,11 @@ A custom Shopify storefront for a wellness and posture-care brand. Built on Dawn
 
 ---
 
-## Demo
-
-[![Watch the store walkthrough](docs/1s.png)](docs/1v.mp4)
-
-**▶ [Watch the full walkthrough](docs/1v.mp4)** — homepage to checkout.
-
----
-
 ## Homepage
 
 Layered editorial hero with animated stat counters and floating trust badges, followed by a dark category section and a benefit-pill product feature.
+
+![Homepage hero](docs/1s.png)
 
 | | |
 |---|---|
