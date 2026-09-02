@@ -1,102 +1,109 @@
 # VexoraCare — Custom Shopify Theme
 
-A custom Shopify storefront for **VexoraCare**, a wellness and posture-care brand. Built on Shopify's Dawn 15.4.0 as a base, with **~8,400 lines of custom Liquid** across 12 bespoke sections — a redesigned homepage, product page, cart, reviews system, and catalog.
-
-> **Live store:** _<!-- TODO: paste your store URL here -->_
-> **Built by:** [@karthikthedev](https://github.com/karthikthedev)
+A custom Shopify storefront for a wellness and posture-care brand. Built on Dawn 15.4.0, with **~8,400 lines of custom Liquid** across 12 bespoke sections — homepage, product page, reviews, cart, and catalog, all rebuilt from scratch.
 
 ---
 
-## Demo walkthrough
+## Demo
 
-<!-- TODO: after uploading docs/v1.mp4, see docs/README.md for how to make this play inline on GitHub -->
+[![Watch the store walkthrough](docs/1s.png)](docs/1v.mp4)
 
-📹 **[Watch the full store walkthrough →](docs/v1.mp4)**
+**▶ [Watch the full walkthrough](docs/1v.mp4)** — homepage to checkout.
 
 ---
 
-## Screenshots
+## Homepage
+
+Layered editorial hero with animated stat counters and floating trust badges, followed by a dark category section and a benefit-pill product feature.
 
 | | |
 |---|---|
-| ![Homepage](docs/s1.png) <br> **Homepage** — hero, brand statement, CTA | ![Hero section](docs/s2.png) <br> **Hero** — headline, stats row, floating trust badges |
-| ![Category cards](docs/s3.png) <br> **Category cards** — posture, massagers, pain relief | ![Catalog](docs/s4.png) <br> **Catalog** — five collection cards, editable handles |
-| ![Product page](docs/s5.png) <br> **Product page** — gallery, buy box, accordions | ![Benefits](docs/s6.png) <br> **Feature strip** — benefits and product highlights |
-| ![Reviews](docs/s7.png) <br> **Reviews** — metaobject-driven, with photo gallery | ![Cart](docs/s8.png) <br> **Cart** — free-shipping progress bar, upsells |
-| ![Collections](docs/s9.png) <br> **Collections** — nine category templates | ![Footer](docs/s10.png) <br> **Footer** — newsletter, socials, contact |
+| ![Category pillars](docs/2s.png) | ![Product benefits](docs/3s.png) |
+| **Three pillars** — category cards with per-card copy and links | **Benefit pills** — flanking a spotlit best-seller |
 
-_Captions are placeholders — reorder or reword them to match what each screenshot actually shows._
+## Product page
+
+| | |
+|---|---|
+| ![Product page](docs/5s.png) | ![Related products](docs/8s.png) |
+| **Buy box** — swatch colour picker, seven size options, live stock state, discount badge, trust row | **Related products** — auto-pulled from the current product's collection |
+
+## Reviews
+
+Built on Shopify **metaobjects** instead of a paid reviews app — aggregate score, distribution, sorting, verified-buyer badges, and a customer photo gallery.
+
+| | |
+|---|---|
+| ![Review summary](docs/6s.png) | ![Review grid](docs/7s.png) |
+| **Aggregate rating** — computed in Liquid across all review entries | **Review cards** — customer photos, star ratings, helpfulness voting |
+
+## Cart
+
+| | |
+|---|---|
+| ![Cart drawer](docs/9s.png) | ![Cart page](docs/10s.png) |
+| **Slide-out drawer** — AJAX add-to-cart, no page reload | **Cart page** — free-shipping progress bar, order notes, live totals |
+
+## Footer
+
+![Footer](docs/4s.png)
 
 ---
 
 ## What I built
 
-Everything below is custom work written on top of Dawn. Each section is **fully schema-driven** — every headline, image, link, colour, and product handle is editable from the Shopify theme editor rather than hardcoded, so the client can run the store without touching code.
+Every section is **schema-driven** — headlines, images, links, colours, and collection handles are all editable from the Shopify theme editor, so the store owner can change content without touching code. Across the custom sections there are 200+ editor settings.
 
 | Section | Lines | What it does |
 |---|---:|---|
-| `sections/b1g1.liquid` | 1,431 | Buy-one-get-one product page variant — 46 theme-editor settings |
-| `sections/product-page-design-2.liquid` | 1,295 | Main product page — gallery, buy box, benefit strip, accordions (shipping, returns, care), featured review |
-| `sections/vexoracare-reviews.liquid` | 1,024 | Review system backed by Shopify **metaobjects**, with star ratings and a customer-photo gallery |
-| `sections/vexoracare-header.liquid` | 803 | Full cart page — AJAX line-item updates, free-shipping progress bar, upsell collection |
-| `sections/vexoracare-catalog.liquid` | 707 | Catalog grid — five configurable collection cards (31 settings) |
-| `sections/vexoracare-hero-2.liquid` | 679 | Secondary hero — three category cards, centre product image, benefit pills (32 settings) |
-| `sections/footer.liquid` | 638 | Custom footer — newsletter signup form, social links, contact block |
-| `sections/vexoracare-hero-1.liquid` | 575 | Homepage hero — layered headline, stats row, floating trust badges (27 settings) |
-| `sections/vexoracare-cart.liquid` | 561 | Alternative cart design with upsell rail |
-| `sections/k2.liquid` | 434 | Related-products grid, auto-pulled from the current product's collection |
-| `sections/vexoracare-product-collection.liquid` | 200 | Product-collection listing block |
-| `templates/page.wishlist.liquid` | 89 | Wishlist page — persists to `localStorage`, no app required |
+| `b1g1.liquid` | 1,431 | Buy-one-get-one product page variant, 46 editor settings |
+| `product-page-design-2.liquid` | 1,295 | Product page — gallery, buy box, benefit strip, shipping/returns/care accordions |
+| `vexoracare-reviews.liquid` | 1,024 | Metaobject-backed review system with photo gallery |
+| `vexoracare-header.liquid` | 803 | Cart page — AJAX line items, free-shipping bar, upsell rail |
+| `vexoracare-catalog.liquid` | 707 | Catalog grid, five configurable collection cards |
+| `vexoracare-hero-2.liquid` | 679 | Category section — three cards, centre image, benefit pills |
+| `footer.liquid` | 638 | Footer — newsletter form, socials, policy links, payment icons |
+| `vexoracare-hero-1.liquid` | 575 | Homepage hero — layered headline, stats, floating badges |
+| `vexoracare-cart.liquid` | 561 | Alternative cart design with upsell rail |
+| `k2.liquid` | 434 | Related-products carousel |
+| `vexoracare-product-collection.liquid` | 200 | Product collection listing block |
+| `templates/page.wishlist.liquid` | 89 | Wishlist page, persisted to `localStorage` |
 
-Plus **nine collection templates** (`women`, `men`, `kids`, `beauty`, `footwear`, `watches`, `luxury`, `home-decore`, `all-products`) and a custom page-transition loader in `layout/theme.liquid` — an SVG progress ring with percentage readout that intercepts internal navigation.
-
----
-
-## Technical highlights
-
-**Metaobject-driven reviews.** Rather than paying for a reviews app, `vexoracare-reviews.liquid` reads from `product.metafields.custom.product_reviews` — a Shopify metaobject definition with `name`, `rating`, `title`, `body`, `date`, and an optional `image` file reference. The optional image field conditionally enables a customer-photo gallery below the review list.
-
-**AJAX cart.** The cart page updates line items via `fetch` against Shopify's Cart API and re-renders using the Section Rendering API — no full page reload. Includes a live free-shipping progress bar computed in Liquid from `cart.total_price` against a merchant-set threshold.
-
-**App-free wishlist.** Wishlist state persists in `localStorage` and renders client-side, avoiding a paid app and its script tag.
-
-**Schema-first authoring.** Across the custom sections there are 200+ theme-editor settings. Copy, imagery, colours, and collection handles are all merchant-editable — the design survives content changes without developer involvement.
-
-**Accessibility.** Sections expose configurable `aria-label` settings, use `visually-hidden` helper classes for screen-reader text, and mark decorative SVGs `aria-hidden`.
+Plus **nine collection templates** (women, men, kids, beauty, footwear, watches, luxury, home decor, all products) and a custom page-transition loader in `layout/theme.liquid` — an SVG progress ring that intercepts internal navigation.
 
 ---
 
-## Repository structure
+## Technical notes
+
+**Metaobject-driven reviews.** `vexoracare-reviews.liquid` reads from `product.metafields.custom.product_reviews`, a metaobject definition with `name`, `rating`, `title`, `body`, `date`, and an optional `image` reference. The aggregate score and rating distribution are computed in Liquid at render time. The optional image field conditionally enables the customer-photo gallery — no app, no subscription, no third-party script.
+
+**AJAX cart.** Line-item updates go through Shopify's Cart API via `fetch` and re-render with the Section Rendering API, so quantity changes and removals never reload the page. The free-shipping progress bar is computed in Liquid from `cart.total_price` against a merchant-set threshold.
+
+**App-free wishlist.** Wishlist state persists in `localStorage` and renders client-side, avoiding a paid app and the script tag that comes with it.
+
+**Accessibility.** Configurable `aria-label` settings per section, `visually-hidden` helper classes for screen-reader text, and `aria-hidden` on decorative SVGs.
+
+---
+
+## Structure
 
 ```
 assets/      185 files — CSS, JS, SVG icons
-config/      theme settings + schema (Dawn 15.4.0 base)
-layout/      theme.liquid (custom page-transition loader), password, gift card
+config/      theme settings and schema
+layout/      theme.liquid with custom page-transition loader
 locales/     51 translation files
-sections/    66 sections — 12 custom, rest Dawn
+sections/    66 sections — 12 custom
 snippets/    57 snippets
 templates/   33 templates — 9 custom collection templates, 2 product variants
-docs/        screenshots and walkthrough video
+docs/        screenshots and demo video
 ```
-
----
 
 ## Running locally
 
-Requires the [Shopify CLI](https://shopify.dev/docs/api/shopify-cli).
-
 ```bash
-shopify theme dev --store your-store.myshopify.com   # hot-reloading local preview
+shopify theme dev --store your-store.myshopify.com   # hot-reloading preview
 shopify theme check                                   # lint the Liquid
-shopify theme push --unpublished                      # upload as a draft theme
+shopify theme push --unpublished                      # upload as a draft
 ```
 
-The reviews section needs a `product_reviews` metaobject definition in Shopify Admin before it renders content — see the setup note in the section's theme-editor sidebar.
-
----
-
-## Notes
-
-- **Sanitized for public release.** The store contact address in the footer is a placeholder (`contact@example.com`); the real address is set in the theme editor under **Footer → Contact**. No API keys, access tokens, or customer data are in this repository.
-- **Third-party integrations.** The theme carries leftover sections from the EComposer and PageFly page builders (`sections/ecom-*`, `snippets/ecom_*`, `snippets/pagefly-main-js.liquid`). These are app-generated, not hand-written.
-- `sections/vexoracare-header.liquid` is named "header" but contains the cart page (its schema name is `Cart page`) — a leftover from reusing the file. It is currently referenced by both `templates/index.json` and `templates/cart.json`.
+The reviews section requires a `product_reviews` metaobject definition in Shopify Admin before it renders content.
