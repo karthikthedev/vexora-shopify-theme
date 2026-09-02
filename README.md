@@ -1,14 +1,22 @@
 # VexoraCare — Custom Shopify Theme
 
 A custom Shopify storefront for a wellness and posture-care brand. Built on Dawn 15.4.0, with **~8,400 lines of custom Liquid** across 12 bespoke sections — homepage, product page, reviews, cart, and catalog, all rebuilt from scratch.
+
 **[View the live store →](https://vexoracare.myshopify.com/)** — storefront password: `vexora`
+
+---
+
+## Demo
+
+[![Watch the store walkthrough](docs/1s.png)](docs/1v.mp4)
+
+**▶ [Watch the full walkthrough](docs/1v.mp4)** — homepage to checkout.
+
 ---
 
 ## Homepage
 
 Layered editorial hero with animated stat counters and floating trust badges, followed by a dark category section and a benefit-pill product feature.
-
-![Homepage hero](docs/1s.png)
 
 | | |
 |---|---|
@@ -89,7 +97,7 @@ locales/     51 translation files
 sections/    66 sections — 12 custom
 snippets/    57 snippets
 templates/   33 templates — 9 custom collection templates, 2 product variants
-docs/        screenshots and demo video
+docs/        screenshots and demo video and demo video
 ```
 
 ## Running locally
