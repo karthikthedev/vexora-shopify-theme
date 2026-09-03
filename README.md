@@ -61,7 +61,7 @@ Every section is **schema-driven** — headlines, images, links, colours, and co
 | `b1g1.liquid` | 1,431 | Buy-one-get-one product page variant, 46 editor settings |
 | `product-page-design-2.liquid` | 1,295 | Product page — gallery, buy box, benefit strip, shipping/returns/care accordions |
 | `vexoracare-reviews.liquid` | 1,024 | Metaobject-backed review system with photo gallery |
-| `vexoracare-header.liquid` | 803 | Cart page — AJAX line items, free-shipping bar, upsell rail |
+| `vexoracare-cart-page.liquid` | 803 | Cart page — AJAX line items, free-shipping bar, upsell rail |
 | `vexoracare-catalog.liquid` | 707 | Catalog grid, five configurable collection cards |
 | `vexoracare-hero-2.liquid` | 679 | Category section — three cards, centre image, benefit pills |
 | `footer.liquid` | 638 | Footer — newsletter form, socials, policy links, payment icons |
