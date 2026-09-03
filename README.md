@@ -97,7 +97,7 @@ locales/     51 translation files
 sections/    66 sections — 12 custom
 snippets/    57 snippets
 templates/   33 templates — 9 custom collection templates, 2 product variants
-docs/        screenshots and demo video and demo video
+docs/        screenshots and demo video
 ```
 
 ## Running locally
