@@ -8,9 +8,9 @@ A custom Shopify storefront for a wellness and posture-care brand. Built on Dawn
 
 ## Demo
 
-[![Watch the store walkthrough](docs/1s.png)](docs/1v.mp4)
+[![Watch the store walkthrough](docs/1s.png)](https://www.loom.com/share/bdc09f4efdc34ba395a46c64ad399d0b)
 
-**▶ [Watch the full walkthrough](docs/1v.mp4)** — homepage to checkout.
+**▶ [Watch the full walkthrough](https://www.loom.com/share/bdc09f4efdc34ba395a46c64ad399d0b)** — homepage to checkout.
 
 ---
 
@@ -97,7 +97,7 @@ locales/     51 translation files
 sections/    66 sections — 12 custom
 snippets/    57 snippets
 templates/   33 templates — 9 custom collection templates, 2 product variants
-docs/        screenshots and demo video
+docs/        screenshots
 ```
 
 ## Running locally
