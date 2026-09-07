@@ -7,9 +7,6 @@
   ╚══════════════════════════════════════════════════════════════╝
 {% endcomment %}
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,700;1,300;1,700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
 /* ─── Tokens ─────────────────────────────────────────────────── */
@@ -551,7 +548,14 @@
         <div class="vxh2-img-box">
           {%- if section.settings.strip_image != blank -%}
             <img
-              src="{{ section.settings.strip_image | img_url: '600x' }}"
+              src="{{ section.settings.strip_image | image_url: width: 520 }}"
+              srcset="{{ section.settings.strip_image | image_url: width: 260 }} 260w,
+                      {{ section.settings.strip_image | image_url: width: 390 }} 390w,
+                      {{ section.settings.strip_image | image_url: width: 520 }} 520w,
+                      {{ section.settings.strip_image | image_url: width: 780 }} 780w"
+              sizes="260px"
+              width="{{ section.settings.strip_image.width }}"
+              height="{{ section.settings.strip_image.height }}"
               alt="{{ section.settings.strip_image_alt | default: 'VexoraCare product in use' }}"
               loading="lazy"
             >

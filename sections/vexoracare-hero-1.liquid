@@ -6,9 +6,6 @@
   ╚══════════════════════════════════════════════════════════════╝
 {% endcomment %}
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
 
@@ -107,7 +104,7 @@
   margin: 0 0 28px;
   letter-spacing: -0.02em;
   opacity: 0;
-  animation: vxh1-rise 0.8s cubic-bezier(.22,1,.36,1) 0.25s forwards;
+  animation: vxh1-rise 0.8s cubic-bezier(.22,1,.36,1) forwards;
 }
 #vxh1-{{ section.id }} .vxh1-h1 .vxh1-italic {
   font-style: italic;
@@ -502,8 +499,14 @@
       <div class="vxh1-photo">
         {%- if section.settings.hero_image != blank -%}
           <img
-            src="{{ section.settings.hero_image | img_url: '900x' }}"
-            srcset="{{ section.settings.hero_image | img_url: '600x' }} 600w, {{ section.settings.hero_image | img_url: '900x' }} 900w"
+            src="{{ section.settings.hero_image | image_url: width: 760 }}"
+            srcset="{{ section.settings.hero_image | image_url: width: 380 }} 380w,
+                    {{ section.settings.hero_image | image_url: width: 570 }} 570w,
+                    {{ section.settings.hero_image | image_url: width: 760 }} 760w,
+                    {{ section.settings.hero_image | image_url: width: 1140 }} 1140w"
+            sizes="(max-width: 860px) 80vw, 380px"
+            width="{{ section.settings.hero_image.width }}"
+            height="{{ section.settings.hero_image.height }}"
             alt="{{ section.settings.hero_image_alt | default: 'VexoraCare wellness product' }}"
             loading="eager"
             fetchpriority="high"
