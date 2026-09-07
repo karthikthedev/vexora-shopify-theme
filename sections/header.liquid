@@ -979,6 +979,7 @@ backdrop-filter: blur(12px);
     aria-label="Shopping cart"
     aria-hidden="true"
     role="dialog"
+    inert
   >
     {%- comment -%} Panel header {%- endcomment -%}
     <div class="vxnav-cp-head">
@@ -1077,6 +1078,7 @@ backdrop-filter: blur(12px);
     id="vxnav-drawer-{{ section.id }}"
     aria-label="Site navigation"
     aria-hidden="true"
+    inert
   >
 
     <div class="vxnav-drawer-head">
@@ -1128,7 +1130,7 @@ backdrop-filter: blur(12px);
           </svg>
         </button>
 
-        <div class="vxnav-sub" id="vxnav-sub-{{ section.id }}" aria-hidden="true">
+        <div class="vxnav-sub" id="vxnav-sub-{{ section.id }}" aria-hidden="true" inert>
 
           {%- comment -%} Shop all collections CTA button {%- endcomment -%}
           <div style="padding: 14px 0 6px;">
@@ -1239,6 +1241,7 @@ backdrop-filter: blur(12px);
     backdrop.classList.add('is-open');
     burger.setAttribute('aria-expanded', 'true');
     drawer.setAttribute('aria-hidden', 'false');
+    drawer.removeAttribute('inert');
     document.body.style.overflow = 'hidden';
   }
   function closeDrawer() {
@@ -1247,6 +1250,7 @@ backdrop-filter: blur(12px);
     backdrop.classList.remove('is-open');
     burger.setAttribute('aria-expanded', 'false');
     drawer.setAttribute('aria-hidden', 'true');
+    drawer.setAttribute('inert', '');
     document.body.style.overflow = '';
   }
   function toggleDrawer() {
@@ -1260,6 +1264,7 @@ backdrop-filter: blur(12px);
     backdrop.classList.add('is-open');
     cartBtn.setAttribute('aria-expanded', 'true');
     cartPanel.setAttribute('aria-hidden', 'false');
+    cartPanel.removeAttribute('inert');
     document.body.style.overflow = 'hidden';
     refreshCart();
     document.dispatchEvent(new CustomEvent('cart:opened'));
@@ -1270,6 +1275,7 @@ backdrop-filter: blur(12px);
     backdrop.classList.remove('is-open');
     if (cartBtn) cartBtn.setAttribute('aria-expanded', 'false');
     cartPanel.setAttribute('aria-hidden', 'true');
+    cartPanel.setAttribute('inert', '');
     document.body.style.overflow = '';
     document.dispatchEvent(new CustomEvent('cart:closed'));
   }
@@ -1452,6 +1458,7 @@ backdrop-filter: blur(12px);
       colBtn.classList.toggle('is-active', !isOpen);
       colBtn.setAttribute('aria-expanded', String(!isOpen));
       colSub.setAttribute('aria-hidden', String(isOpen));
+      if (isOpen) { colSub.setAttribute('inert', ''); } else { colSub.removeAttribute('inert'); }
     });
   }
 
