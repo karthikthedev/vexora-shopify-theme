@@ -71,7 +71,7 @@ Every section is **schema-driven** — headlines, images, links, colours, and co
 | `vexoracare-product-collection.liquid` | 200 | Product collection listing block |
 | `templates/page.wishlist.liquid` | 89 | Wishlist page, persisted to `localStorage` |
 
-Plus **nine collection templates** (women, men, kids, beauty, footwear, watches, luxury, home decor, all products) and a custom page-transition loader in `layout/theme.liquid` — an SVG progress ring that intercepts internal navigation.
+Plus **nine collection templates** (women, men, kids, beauty, footwear, watches, luxury, home decor, all products) and a page-transition progress bar in `layout/theme.liquid` — a thin top bar that intercepts internal navigation.
 
 ---
 
@@ -111,7 +111,7 @@ CLS is effectively zero on both, and the server is not the bottleneck — the ro
 
 ### Room for improvement
 
-**Main-thread work — the dominant cost.** 17.4 s of main-thread time on mobile, of which 8.9 s is Style & Layout. The cause is animations that cannot run on the compositor, so they force style and paint work every frame. Two of them looped forever: a `border-radius` morph on the hero photo, and the page-loader dots, which kept animating behind a `visibility: hidden` overlay for the life of every page. Both are now fixed. The remaining one-shot offenders — a `width`-driven typewriter reveal and its border-colour cursor — are ten layout steps that run once, and are kept deliberately, since removing them costs the effect and saves almost nothing.
+**Main-thread work — the dominant cost.** 17.4 s of main-thread time on mobile, of which 8.9 s is Style & Layout. The cause is animations that cannot run on the compositor, so they force style and paint work every frame. Two of them looped forever: a `border-radius` morph on the hero photo, and the dots in the full-screen loading overlay, which kept animating behind a `visibility: hidden` overlay for the life of every page. The morph is gone, and the overlay was removed outright — it held the hero back by up to 2.2 s on first visit while a simulated progress bar played, and it accounted for five of the eight non-composited animations on the page. The remaining one-shot offenders — a `width`-driven typewriter reveal and its border-colour cursor — are ten layout steps that run once, and are kept deliberately, since removing them costs the effect and saves almost nothing.
 
 **LCP is waiting on the main thread, not the network.** The 6.6 s breaks down as 977 ms to first byte plus 1,563 ms of element render delay, with no image load delay at all. Image optimisation would buy roughly 9 KiB; freeing the main thread is what moves this number.
 
@@ -128,7 +128,7 @@ CLS is effectively zero on both, and the server is not the bottleneck — the ro
 ```
 assets/      185 files — CSS, JS, SVG icons
 config/      theme settings and schema
-layout/      theme.liquid with custom page-transition loader
+layout/      theme.liquid with page-transition progress bar
 locales/     51 translation files
 sections/    66 sections — 12 custom
 snippets/    57 snippets
