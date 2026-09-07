@@ -18,6 +18,19 @@
       <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
     {%- endunless -%}
 
+    {%- comment -%}
+      Playfair Display + Jost for the custom Vexora sections. One request for
+      the whole theme, covering the union of the weights each section used to
+      request for itself. Loaded off the critical path (media swap on load) so
+      it never blocks first paint; every face is display=swap, so text paints
+      in the fallback immediately either way.
+    {%- endcomment -%}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    {%- assign vx_fonts = 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Jost:wght@300;400;500;600;700&display=swap' -%}
+    <link rel="stylesheet" href="{{ vx_fonts }}" media="print" onload="this.media='all'; this.onload=null;">
+    <noscript><link rel="stylesheet" href="{{ vx_fonts }}"></noscript>
+
     <title>
       {{ page_title }}
       {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
@@ -280,10 +293,12 @@
       {% comment %}theme-check-enable AssetPreload{% endcomment %}
     {%- endunless -%}
 
-    {%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
-      {{ 'component-localization-form.css' | asset_url | stylesheet_tag: preload: true }}
-      <script src="{{ 'localization-form.js' | asset_url }}" defer="defer"></script>
-    {%- endif -%}
+    {%- comment -%}
+      component-localization-form.css and localization-form.js now load from the sections
+      that actually render a localization form (announcement-bar, header-drawer). The
+      condition here only checked whether the store has multiple countries/languages, so
+      the stylesheet blocked rendering on every page even when no form was on it.
+    {%- endcomment -%}
 
     {%- if settings.predictive_search_enabled -%}
       <link

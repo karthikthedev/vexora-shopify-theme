@@ -6,9 +6,6 @@
   ╚══════════════════════════════════════════════════════════════╝
 {% endcomment %}
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
 /* ─── Global overflow fix ─────────────────────────────────────── */
@@ -926,11 +923,15 @@ backdrop-filter: blur(12px);
     {%- comment -%} CENTER — Logo {%- endcomment -%}
     <a href="{{ routes.root_url }}" class="vxnav-logo" aria-label="{{ shop.name }} — Home">
       {%- if settings.logo != blank -%}
+        {%- assign vx_logo_h = settings.logo.height | default: 1 -%}
         <img
-          src="{{ settings.logo | img_url: '300x' }}"
+          src="{{ settings.logo | image_url: height: 108 }}"
+          srcset="{{ settings.logo | image_url: height: 54 }} 1x,
+                  {{ settings.logo | image_url: height: 108 }} 2x,
+                  {{ settings.logo | image_url: height: 162 }} 3x"
           alt="{{ shop.name }}"
-          width="auto"
-          height="38"
+          width="{{ settings.logo.width | times: 54.0 | divided_by: vx_logo_h | round }}"
+          height="54"
           loading="eager"
         >
       {%- else -%}
