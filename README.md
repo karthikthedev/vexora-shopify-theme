@@ -89,12 +89,41 @@ Plus **nine collection templates** (women, men, kids, beauty, footwear, watches,
 
 ## Lighthouse
 
-Measured with Lighthouse 13.4.1 against a live storefront running this theme, 7 September 2026, on the default presets — mobile throttled to 4× CPU slowdown over simulated slow 4G, desktop unthrottled.
+### Optimisation pass
+
+Mobile, Lighthouse 13.4.1, both runs against the same local `shopify theme dev` server thirty minutes apart, so the comparison is like for like.
+
+| | Before | After | |
+|---|---:|---:|---:|
+| **Performance score** | 49 | **55** | +6 |
+| Largest Contentful Paint | 7.9 s | **5.7 s** | −2.15 s |
+| Speed Index | 5.1 s | **3.6 s** | −1.46 s |
+| Cumulative Layout Shift | 0.038 | **0.003** | −0.036 |
+| Time to Interactive | 8.8 s | 8.4 s | −0.40 s |
+| Total Blocking Time | 800 ms | 750 ms | −50 ms |
+| First Contentful Paint | 2.7 s | 2.7 s | — |
+
+The LCP element is the hero `<h1>`, not an image — Lighthouse reports `lcp-discovery-insight` as not applicable, so there is nothing to preload and the work was in whatever delayed that heading's first paint:
+
+| LCP subpart | Before | After |
+|---|---:|---:|
+| Time to first byte | 1,431 ms | 1,083 ms |
+| Element render delay | 1,880 ms | **524 ms** |
+
+Element render delay fell 72%. Render-blocking requests went from four (2,543 ms) to one (816 ms), stylesheets from ten to four, font files from six to five. Not all of the LCP gain is the change: TTFB also moved 348 ms, which is dev-server variance, so roughly 1.36 s of the 2.15 s is attributable to the render-delay work.
+
+**What changed.** Nine sections each emitted their own Google Fonts stylesheet, every one asking for a different weight combination so none shared a cache entry, and all discovered late because they sit in the body — the homepage pulled four. These became a single request in `<head>` covering the union of every weight, loaded off the critical path; all sixteen weight/style combinations are still requested, so typography is unchanged. The hero `<h1>` also carried a 250 ms `animation-delay` while sitting at `opacity: 0`, and Chrome raises no LCP candidate for a zero-opacity element, so that delay gated the metric on the LCP element itself. Slideshow, slider and localization stylesheets blocked rendering on every page for markup that only renders conditionally — a one-block announcement bar, selectors switched off — and now load on the same condition as the markup they style.
+
+Consolidating the font request also collapsed CLS from 0.038 to 0.003: the font now arrives before first paint, so the swap no longer reflows the heading.
+
+### Production baseline
+
+Measured against a live storefront on 7 September 2026, default presets — mobile at 4× CPU slowdown over simulated slow 4G, desktop unthrottled. These figures **predate the optimisation pass above**.
 
 | Category | Mobile | Desktop |
 |---|---:|---:|
 | Performance | 41 | 65 |
-| Accessibility | 90 | 93 |
+| Accessibility | 90 → **100** | 93 → **100** |
 | Best Practices | 77 | 77 |
 | SEO | 85 | 92 |
 
@@ -107,17 +136,17 @@ Measured with Lighthouse 13.4.1 against a live storefront running this theme, 7 
 | Cumulative Layout Shift | 0.003 | 0.001 |
 | Time to Interactive | 8.2 s | 2.3 s |
 
-CLS is effectively zero on both, and the server is not the bottleneck — the root document returns in 60 ms. INP is absent because it needs real interaction; a lab run cannot produce it. The page is 1,253 KiB over 122 requests, with a 430-element DOM.
+The server is not the bottleneck — the root document returns in 60 ms. INP is absent because it needs real interaction; a lab run cannot produce it. The page is 1,253 KiB over 122 requests, with a 430-element DOM.
+
+Local and production are not interchangeable: `shopify theme dev` applies no compression and returns the document roughly 350 ms slower, so local runs read about 1.3 s pessimistic on LCP. A production re-run should land below the 5.7 s measured locally.
 
 ### Room for improvement
 
-**Main-thread work — the dominant cost.** 17.4 s of main-thread time on mobile, of which 8.9 s is Style & Layout. The cause is animations that cannot run on the compositor, so they force style and paint work every frame. Two of them looped forever: a `border-radius` morph on the hero photo, and the dots in the full-screen loading overlay, which kept animating behind a `visibility: hidden` overlay for the life of every page. The morph is gone, and the overlay was removed outright — it held the hero back by up to 2.2 s on first visit while a simulated progress bar played, and it accounted for five of the eight non-composited animations on the page. The remaining one-shot offenders — a `width`-driven typewriter reveal and its border-colour cursor — are ten layout steps that run once, and are kept deliberately, since removing them costs the effect and saves almost nothing.
+**Total Blocking Time is now the ceiling.** 750 ms on mobile, and the heaviest contributors are not this theme's: Shopify's perf-kit costs 2,222 ms of CPU in the production run, followed by the web-pixels bundle and the Facebook Pixel. 69 KiB of the JavaScript shipped is unused, none of it from the theme. The lever is pruning unused pixels in Customer Events rather than anything in the Liquid.
 
-**LCP is waiting on the main thread, not the network.** The 6.6 s breaks down as 977 ms to first byte plus 1,563 ms of element render delay, with no image load delay at all. Image optimisation would buy roughly 9 KiB; freeing the main thread is what moves this number.
+**Animations are down to one.** Lighthouse flagged eight non-composited animated elements; seven are gone. Two of them had looped forever — a `border-radius` morph on the hero photo, and the dots in a full-screen loading overlay that kept animating behind `visibility: hidden` for the life of every page. That overlay was removed outright: it played a simulated progress bar and dismissed on a timer up to 2.2 s after the document was already complete. The one that remains is a `width`-driven typewriter reveal, ten layout steps running once, kept deliberately — removing it costs the effect and saves almost nothing.
 
-**Third-party JavaScript.** Shopify's own perf-kit is the single heaviest script at 2,222 ms of CPU, followed by the web-pixels bundle and the Facebook Pixel. 69 KiB of the JavaScript shipped is unused, and none of it comes from this theme. The lever available here is pruning unused pixels in Customer Events rather than anything in the Liquid.
-
-**Accessibility.** Four audits failed: `aria-label` on roleless `div`s in the payment badges, focusable children inside `aria-hidden` drawers, an accessible name that did not match its visible text, and a link distinguished from body text by colour alone. All four are fixed and awaiting re-measurement.
+**base.css.** 82 KiB and 92% unused on the homepage, and the single remaining render-blocking request locally at 816 ms. In production it measures 0 ms and 0.0 KiB — Shopify gzips it and the CDN caches it — so the local figure is an artefact of the dev server, and splitting the file would be risk bought against a cost that does not exist in production.
 
 **Best Practices and SEO.** Best Practices sits at 77 on both form factors, driven by third-party cookies from the pixels above. On SEO, the page has no meta description, and mobile additionally flags an invalid `robots.txt` — which is the whole of the 85-vs-92 gap.
 
