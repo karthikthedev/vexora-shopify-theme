@@ -87,6 +87,42 @@ Plus **nine collection templates** (women, men, kids, beauty, footwear, watches,
 
 ---
 
+## Lighthouse
+
+Measured with Lighthouse 13.4.1 against a live storefront running this theme, 7 September 2026, on the default presets — mobile throttled to 4× CPU slowdown over simulated slow 4G, desktop unthrottled.
+
+| Category | Mobile | Desktop |
+|---|---:|---:|
+| Performance | 41 | 65 |
+| Accessibility | 90 | 93 |
+| Best Practices | 77 | 77 |
+| SEO | 85 | 92 |
+
+| Metric | Mobile | Desktop |
+|---|---:|---:|
+| First Contentful Paint | 2.1 s | 0.6 s |
+| Largest Contentful Paint | 6.6 s | 2.3 s |
+| Speed Index | 6.9 s | 2.2 s |
+| Total Blocking Time | 1,920 ms | 420 ms |
+| Cumulative Layout Shift | 0.003 | 0.001 |
+| Time to Interactive | 8.2 s | 2.3 s |
+
+CLS is effectively zero on both, and the server is not the bottleneck — the root document returns in 60 ms. INP is absent because it needs real interaction; a lab run cannot produce it. The page is 1,253 KiB over 122 requests, with a 430-element DOM.
+
+### Room for improvement
+
+**Main-thread work — the dominant cost.** 17.4 s of main-thread time on mobile, of which 8.9 s is Style & Layout. The cause is animations that cannot run on the compositor, so they force style and paint work every frame. Two of them looped forever: a `border-radius` morph on the hero photo, and the page-loader dots, which kept animating behind a `visibility: hidden` overlay for the life of every page. Both are now fixed. The remaining one-shot offenders — a `width`-driven typewriter reveal and its border-colour cursor — are ten layout steps that run once, and are kept deliberately, since removing them costs the effect and saves almost nothing.
+
+**LCP is waiting on the main thread, not the network.** The 6.6 s breaks down as 977 ms to first byte plus 1,563 ms of element render delay, with no image load delay at all. Image optimisation would buy roughly 9 KiB; freeing the main thread is what moves this number.
+
+**Third-party JavaScript.** Shopify's own perf-kit is the single heaviest script at 2,222 ms of CPU, followed by the web-pixels bundle and the Facebook Pixel. 69 KiB of the JavaScript shipped is unused, and none of it comes from this theme. The lever available here is pruning unused pixels in Customer Events rather than anything in the Liquid.
+
+**Accessibility.** Four audits failed: `aria-label` on roleless `div`s in the payment badges, focusable children inside `aria-hidden` drawers, an accessible name that did not match its visible text, and a link distinguished from body text by colour alone. All four are fixed and awaiting re-measurement.
+
+**Best Practices and SEO.** Best Practices sits at 77 on both form factors, driven by third-party cookies from the pixels above. On SEO, the page has no meta description, and mobile additionally flags an invalid `robots.txt` — which is the whole of the 85-vs-92 gap.
+
+---
+
 ## Structure
 
 ```
