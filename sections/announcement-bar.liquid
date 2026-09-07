@@ -1,5 +1,18 @@
-{{ 'component-slideshow.css' | asset_url | stylesheet_tag }}
-{{ 'component-slider.css' | asset_url | stylesheet_tag }}
+{%- comment -%}
+  The slideshow markup below only renders when there is more than one block, and the
+  localization forms only when a selector is enabled and the store has more than one
+  country/language. Load each stylesheet on the same condition as the markup it styles,
+  so a single-block bar with no selectors costs no render-blocking CSS.
+{%- endcomment -%}
+{%- if section.blocks.size > 1 -%}
+  {{ 'component-slideshow.css' | asset_url | stylesheet_tag }}
+  {{ 'component-slider.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
+{%- if section.settings.enable_country_selector and localization.available_countries.size > 1
+   or section.settings.enable_language_selector and localization.available_languages.size > 1 -%}
+  {{ 'component-localization-form.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'localization-form.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
 
 <style>
   .announcement-bar__message {

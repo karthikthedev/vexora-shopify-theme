@@ -293,10 +293,12 @@
       {% comment %}theme-check-enable AssetPreload{% endcomment %}
     {%- endunless -%}
 
-    {%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
-      {{ 'component-localization-form.css' | asset_url | stylesheet_tag: preload: true }}
-      <script src="{{ 'localization-form.js' | asset_url }}" defer="defer"></script>
-    {%- endif -%}
+    {%- comment -%}
+      component-localization-form.css and localization-form.js now load from the sections
+      that actually render a localization form (announcement-bar, header-drawer). The
+      condition here only checked whether the store has multiple countries/languages, so
+      the stylesheet blocked rendering on every page even when no form was on it.
+    {%- endcomment -%}
 
     {%- if settings.predictive_search_enabled -%}
       <link
