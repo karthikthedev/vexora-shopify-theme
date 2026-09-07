@@ -274,7 +274,6 @@
   border-radius: 56% 44% 60% 40% / 50% 44% 56% 50%;
   overflow: hidden;
   background: linear-gradient(145deg, rgba(249,115,22,0.12), rgba(251,146,60,0.06));
-  animation: vxh1-morph 12s ease-in-out infinite alternate;
 }
 #vxh1-{{ section.id }} .vxh1-photo img {
   width: 100%; height: 100%;
@@ -392,10 +391,6 @@
 @keyframes vxh1-spin {
   to { transform: rotate(360deg); }
 }
-@keyframes vxh1-morph {
-  0%   { border-radius: 56% 44% 60% 40% / 50% 44% 56% 50%; }
-  100% { border-radius: 44% 56% 40% 60% / 44% 56% 50% 50%; }
-}
 @keyframes vxh1-pulse {
   0%   { transform: scale(1) translate(0,0); opacity: 1; }
   100% { transform: scale(1.08) translate(-2%, 2%); opacity: 0.7; }
@@ -425,6 +420,29 @@
   #vxh1-{{ section.id }} .vxh1-img-frame { width: min(300px, 80%); }
   #vxh1-{{ section.id }} .vxh1-card-trust { left: -8%; }
   #vxh1-{{ section.id }} .vxh1-card-stars { right: -4%; }
+}
+
+/* ─── Reduced motion ────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  #vxh1-{{ section.id }} *,
+  #vxh1-{{ section.id }} *::before,
+  #vxh1-{{ section.id }} *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  /* restore the finished state of the entrance animations */
+  #vxh1-{{ section.id }} .vxh1-h1,
+  #vxh1-{{ section.id }} .vxh1-sub,
+  #vxh1-{{ section.id }} .vxh1-ctas,
+  #vxh1-{{ section.id }} .vxh1-stats,
+  #vxh1-{{ section.id }} .vxh1-img-frame {
+    opacity: 1;
+    transform: none;
+  }
+  #vxh1-{{ section.id }} .typing-text {
+    width: auto;
+    border-right-color: transparent;
+  }
 }
 </style>
 
